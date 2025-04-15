@@ -3,36 +3,40 @@
 <?import javafx.scene.control.*?><!-- Importa controles de JavaFX como botones, menús, etc. -->
 <?import javafx.scene.layout.*?><!-- Importa contenedores de JavaFX como BorderPane, StackPane, etc. -->
 <?import javafx.scene.Scene?><!-- Importa la clase Scene -->
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 
 <!-- Definición del contenedor principal (BorderPane) que organiza los componentes en 5 áreas: top, left, right, bottom, center -->
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controller.MainController"><!-- Se asigna el controlador de esta vista -->
+            fx:controller="controller.MainController"
+            stylesheets="@style.css">
 
-    <!-- Menú Superior -->
     <top>
-    	<!-- Menú de navegación -->
-        <MenuBar>
-        	<!-- Menú "Archivo" con una opción para cerrar la aplicación -->
+        <MenuBar fx:id="menuBar" styleClass="menu-bar">
             <Menu text="Archivo">
-                <MenuItem text="Cerrar" onAction="#handleCerrar"/><!-- Llama al método handleCerrar cuando se hace clic -->
+                <MenuItem text="Cerrar" onAction="#handleCerrar"/>
             </Menu>
-            <!-- Menú "Gestión" con varias opciones para manejar diferentes vistas -->
-            <Menu text="Gestión">
-            	<!-- Opción para mostrar la vista de productos -->
-                <MenuItem text="Productos" onAction="#mostrarProductos"/><!-- Llama a mostrarProductos() -->
-                <!-- Opción para mostrar la vista de entradas -->
-                <MenuItem text="Entradas" onAction="#mostrarEntradas"/><!-- Llama a mostrarEntradas() -->
-                <!-- Opción para mostrar la vista de salidas -->
-                <MenuItem text="Salidas" onAction="#mostrarSalidas"/><!-- Llama a mostrarSalidas() -->
-                <!-- Opción para mostrar la vista de reportes -->
-                <MenuItem text="Reportes" onAction="#mostrarReportes"/><!-- Llama a mostrarReportes() -->
+            <Menu text="Productos">
+                <MenuItem text="Ver Productos" onAction="#mostrarProductos"/>
+            </Menu>
+            <Menu text="Entradas">
+                <MenuItem text="Ver Entradas" onAction="#mostrarEntradas"/>
+            </Menu>
+            <Menu text="Salidas">
+                <MenuItem text="Ver Salidas" onAction="#mostrarSalidas"/>
+            </Menu>
+            <Menu text="Reportes">
+                <MenuItem text="Ver Reportes" onAction="#mostrarReportes"/>
             </Menu>
         </MenuBar>
     </top>
 
-    <!-- Área Principal donde se cargan las vistas -->
     <center>
-        <StackPane fx:id="panelPrincipal"/>
-    </center>
+        <!-- StackPane para mostrar contenido en el área central -->
+        <StackPane fx:id="panelPrincipal" styleClass="stack-pane">
+            
 
+        </StackPane>
+    </center>
 </BorderPane>
+

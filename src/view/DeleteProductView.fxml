@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="controller.DeleteProductController" spacing="20" alignment="CENTER">
+    <Text text="Introduzca los datos del producto para eliminarlo:" />
+    <TextField fx:id="productCode" promptText="Código del producto" />
+    <TextField fx:id="productName" promptText="Nombre del producto" />
+    <Button text="Eliminar Producto" onAction="#handleDeleteProduct" />
+    <Button text="Cancelar" onAction="#handleCancel" />
+</VBox>

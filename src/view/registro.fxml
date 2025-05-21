@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.*?>
+
+<VBox spacing="10" alignment="CENTER" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controller.RegistroController">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="Registrar Nuevo Usuario" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+    <TextField fx:id="txtNombre" promptText="Ingrese su nombre" />
+    <TextField fx:id="txtUsuario" promptText="Nombre de usuario"/>
+    <PasswordField fx:id="txtContraseña" promptText="Contraseña"/>
+    <ComboBox fx:id="comboRol"/>
+
+    <Button text="Registrar" onAction="#registrarUsuario"/>
+</VBox>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<!-- Vista principal de la pantalla de login -->
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="controller.LoginController" prefWidth="400" prefHeight="250">
+	<!-- Contenedor vertical para los elementos de la interfaz -->
+    <VBox alignment="CENTER" spacing="15" layoutX="50" layoutY="40" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0">
+         <!-- Título de la pantalla de inicio de sesión -->
+        <Label text="Iniciar Sesión" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+		<!-- Campo de texto para ingresar el nombre de usuario y luego contraseña-->
+        <TextField fx:id="txtUsuario" promptText="Usuario" maxWidth="250" />
+        <PasswordField fx:id="txtContrasena" promptText="Contraseña" maxWidth="250" />
+		<!-- Botón para hacer login, cuando se hace clic, llama a la función handleLogin -->
+        <Button text="Iniciar sesión" onAction="#handleLogin" maxWidth="250" />
+        <!--  Muestra mensajes de error -->
+        <Label fx:id="lblMensaje" textFill="red" />
+        
+    </VBox>
+</AnchorPane>

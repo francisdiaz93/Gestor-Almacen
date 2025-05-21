@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="controller.AddProductController">
+    <children>
+        <!-- ScrollPane que permite desplazamiento -->
+        <ScrollPane fitToWidth="true" prefWidth="800" prefHeight="600" vbarPolicy="AS_NEEDED" hbarPolicy="AS_NEEDED">
+            <content>
+                <VBox spacing="10" fillWidth="true" alignment="CENTER">
+                    <children>
+                        <Label text="Agregar Nuevo Producto" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                        <TextField fx:id="nombreField" promptText="Nombre"/>
+                        <ComboBox fx:id="categoriaComboBox" promptText="Categoría" editable="true"/>
+                        <TextField fx:id="descripcionField" promptText="Descripción"/>
+                        <TextField fx:id="cantidadField" promptText="Cantidad"/>
+                        <TextField fx:id="proveedorField" promptText="Proveedor"/>
+                        <TextField fx:id="marcaField" promptText="Marca"/>
+                        <TextField fx:id="stockMinimoField" promptText="Stock Minimo"/>
+                        <DatePicker fx:id="fechaIngresoPicker" promptText="Fecha de ingreso"/>
+
+						<Label text="Observaciones:"/>
+						<TextArea fx:id="observacionesField" />
+                        <Button text="Guardar" onAction="#handleAddProduct"/>
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </children>
+</AnchorPane>

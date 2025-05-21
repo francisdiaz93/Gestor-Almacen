@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<GridPane fx:controller="controller.EditarProductoController"
+          xmlns:fx="http://javafx.com/fxml"
+          hgap="10" vgap="10">
+          <padding>
+        		<Insets top="20" right="20" bottom="20" left="20" />
+    	  </padding>
+    <Label text="Nombre:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+    <TextField fx:id="nombreField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+    <Label text="Código:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+    <TextField fx:id="codigoField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+	<Label text="Categoría:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+	<ComboBox fx:id="comboCategorias" GridPane.rowIndex="2" GridPane.columnIndex="1" prefWidth="200"/>
+
+    <Label text="Descripción:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+    <TextField fx:id="descripcionField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+    <Label text="Cantidad:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+    <TextField fx:id="cantidadField" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+    <Label text="Proveedor:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+    <TextField fx:id="proveedorField" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+    <Label text="Fecha Ingreso:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+    <DatePicker fx:id="fechaIngresoPicker" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+
+    <Label text="Marca:" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
+    <TextField fx:id="marcaField" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+
+    <Label text="Stock mínimo:" GridPane.rowIndex="9" GridPane.columnIndex="0"/>
+    <TextField fx:id="stockMinimoField" GridPane.rowIndex="9" GridPane.columnIndex="1"/>
+
+
+
+    <Button text="Guardar" onAction="#guardarCambios" GridPane.rowIndex="11" GridPane.columnIndex="1" />
+</GridPane>

@@ -1,0 +1,25 @@
+.root {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 14px;
+    -fx-background-color: #f4f4f4;
+}
+
+.menu-bar {
+    -fx-background-color: #e0f0ff;
+}
+
+.menu, .menu-item {
+    -fx-text-fill: white;
+}
+
+.menu-item:hover {
+    -fx-background-color: #34495e;
+}
+
+.stack-pane {
+    -fx-padding: 20px;
+}
+
+.label {
+    -fx-text-fill: #333;
+}

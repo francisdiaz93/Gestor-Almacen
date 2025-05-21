@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controller.SeleccionarProductoController" spacing="10">
+     <padding>
+        <Insets top="20" right="20" bottom="20" left="20" />
+    </padding>
+
+    <Label text="Seleccione un producto en stock:" style="-fx-font-weight: bold; -fx-font-size: 14px;" />
+
+    <TableView fx:id="tablaProductos" prefHeight="300" prefWidth="500">
+
+        <columns>
+            <TableColumn fx:id="colCodigo" text="Código" prefWidth="100" />
+            <TableColumn fx:id="colNombre" text="Nombre" prefWidth="200" />
+            <TableColumn fx:id="colStock" text="Stock" prefWidth="100" />
+        </columns>
+
+    </TableView>
+
+    <HBox spacing="10" alignment="center_right">
+        <Button text="Seleccionar" onAction="#seleccionarProducto" />
+        <Button text="Cancelar" onAction="#cancelar" />
+    </HBox>
+
+</VBox>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controller.AgregarSalidaController"
+      spacing="10">
+      <padding>
+         <Insets top="20" right="20" bottom="20" left="20" />
+      </padding>
+
+    <Label text="Agregar Nueva Salida" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+
+    <!-- Aquí el HBox separado -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <TextField fx:id="codigoProductoField" promptText="Código producto" />
+        <Button fx:id="btnBuscarProducto" text="Buscar producto" onAction="#abrirSelectorProductos" />
+    </HBox>
+
+    <GridPane hgap="10" vgap="10">
+        <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" minWidth="100" />
+            <ColumnConstraints halignment="LEFT" minWidth="200" />
+        </columnConstraints>
+
+        <!-- Departamento -->
+        <Label text="Departamento:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+        <ComboBox fx:id="departamentoComboBox" promptText="Seleccione departamento" GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="200" />
+
+        <!-- Cantidad -->
+        <Label text="Cantidad:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+        <TextField fx:id="cantidadField" promptText="Cantidad" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+        <!-- Fecha -->
+        <Label text="Fecha:" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+        <DatePicker fx:id="fechaSalidaPicker" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+
+        <!-- Motivo / Observaciones -->
+        <Label text="Motivo / Observaciones:" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+        <TextField fx:id="motivoField" promptText="Motivo o comentarios" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+
+    </GridPane>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Guardar" onAction="#registrarSalida" />
+        <Button text="Cancelar" fx:id="btnCancelar" onAction="#cancelar" />
+    </HBox>
+
+</VBox>

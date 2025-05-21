@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="controller.VerEntradasController" prefWidth="800" prefHeight="600">
+    <children>
+        <VBox spacing="10" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10" />
+            </padding>
+
+    <!-- Título centrado dentro de un HBox -->
+    <HBox alignment="CENTER">
+        <Label text="Entradas Registradas" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+    </HBox>
+    
+        <HBox alignment="TOP_CENTER">
+    <TextField fx:id="buscadorTextField"
+               promptText="Filtrar por nombre o factura."
+               prefWidth="400"/>
+	</HBox>
+            <!-- Botón centrado -->
+            <StackPane>
+                <Button fx:id="btnAgregarEntrada" text="Agregar Entrada" onAction="#abrirFormularioAgregarEntrada"/>
+            </StackPane>
+
+            <!-- Tabla de entradas que crece con el espacio -->
+            <TableView fx:id="tableView" prefWidth="900.0" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colFechaIngreso" text="Fecha Ingreso" prefWidth="150" />
+                    <TableColumn fx:id="colNombreProducto" text="Nombre" prefWidth="250" />
+                    <TableColumn fx:id="colCodigoProducto" text="Producto ID" prefWidth="100" />
+                    <TableColumn fx:id="colCantidad" text="Cantidad" prefWidth="100" />
+                    <TableColumn fx:id="colProveedor" text="Proveedor" prefWidth="150" />
+                    <TableColumn fx:id="colNumeroFactura" text="Nº Factura" prefWidth="150" />
+                    <TableColumn fx:id="colObservaciones" text="Observaciones" prefWidth="200" />
+                </columns>
+            </TableView>
+
+        </VBox>
+    </children>
+</AnchorPane>

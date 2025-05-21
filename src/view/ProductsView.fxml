@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Pos?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controller.ProductsController"
+      spacing="15" alignment="TOP_CENTER" prefHeight="600"
+      style="-fx-padding: 20;"
+      prefWidth="Infinity" VBox.vgrow="ALWAYS">
+
+    <!-- Título -->
+    <Label text="Productos"
+           style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+
+<HBox alignment="TOP_CENTER">
+    <TextField fx:id="campoBusqueda"
+               promptText="Filtrar por nombre, categoría o código."
+               prefWidth="400"/>
+</HBox>
+               
+     <!--  Agregar nuevo producto -->
+     
+     <Button fx:id="btnAgregarEntrada" text="Agregar Producto Nuevo" onAction="#abrirVentanaAgregarProductoNuevo"/>
+
+    <!-- Scroll con productos como tarjetas -->
+
+        <FlowPane fx:id="contenedorProductos"
+          hgap="15" vgap="15"
+          alignment="TOP_LEFT">
+          <Button text="+" onAction="#abrirVentanaAgregarProductoNuevo"/>
+
+		</FlowPane>
+        	<padding>
+        		<Insets top="10" right="10" bottom="10" left="10" />
+    		</padding>
+
+</VBox>

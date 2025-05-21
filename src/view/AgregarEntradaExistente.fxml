@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controller.AgregarEntradaExistenteController"
+      spacing="10">
+              <padding>
+        		<Insets top="20" right="20" bottom="20" left="20" />
+    	  </padding>
+    
+    <Label text="Agregar Entrada - Producto Existente" style="-fx-font-size: 18px;"/>
+    
+    <HBox spacing="10">
+        <Label text="Producto:"/>
+        <Label fx:id="nombreProductoLabel"/>
+    </HBox>
+    
+    <HBox spacing="10">
+        <Label text="Proveedor:"/>
+        <Label fx:id="proveedorField"/>
+    </HBox>
+
+    <HBox spacing="10">
+        <Label text="Cantidad a ingresar:"/>
+        <TextField fx:id="cantidadField"/>
+    </HBox>
+
+    <HBox spacing="10">
+        <Label text="Fecha de ingreso:"/>
+        <DatePicker fx:id="fechaPicker"/>
+    </HBox>
+    
+    <HBox spacing="10" alignment="TOP_LEFT">
+    <Label text="Observaciones:"/>
+    <TextArea fx:id="observacionesField" prefRowCount="3" prefColumnCount="20"/>
+</HBox>
+
+    <Button text="Registrar Entrada" onAction="#registrarEntrada"/>
+</VBox>

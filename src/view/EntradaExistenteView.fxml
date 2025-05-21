@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.EntradaExistenteController">
+
+    <center>
+        <TableView fx:id="tablaProductos" prefHeight="300">
+            <columns>
+                <TableColumn fx:id="colNombre" text="Nombre" prefWidth="150"/>
+                <TableColumn fx:id="colCodigo" text="Código" prefWidth="100"/>
+                <TableColumn fx:id="colCantidad" text="Cantidad Actual" prefWidth="100"/>
+            </columns>
+        </TableView>
+    </center>
+
+    <bottom>
+        <VBox spacing="10">
+        <padding>
+        		<Insets top="20" right="20" bottom="20" left="20" />
+    	  </padding>
+            <Label text="Cantidad a ingresar:"/>
+            <TextField fx:id="cantidadField"/>
+
+            <Label text="Número de factura:"/>
+            <TextField fx:id="facturaField"/>
+
+            <Label text="Proveedor:"/>
+            <TextField fx:id="proveedorField"/>
+
+            <Label text="Observaciones:"/>
+            <TextField fx:id="observacionesField"/>
+
+            <Button text="Registrar Entrada"
+                    onAction="#registrarEntrada"
+                    maxWidth="150"
+                    style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+        </VBox>
+    </bottom>
+</BorderPane>

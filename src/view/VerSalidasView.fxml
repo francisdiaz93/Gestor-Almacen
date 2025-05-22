@@ -18,13 +18,19 @@
     
     <HBox alignment="TOP_CENTER">
     <TextField fx:id="buscarField"
-               promptText="Filtrar por nombre o factura."
+               promptText="Filtrar por nombre, factura o departamento."
                prefWidth="400"/>
 	</HBox>
+	
+	<VBox alignment="CENTER" spacing="10" layoutX="20" layoutY="20">
+    	<Button fx:id="btnAgregarSalida" onAction="#abrirFormularioAgregarSalida" text="Agregar Salida" />
+    	<Button fx:id="btnExportarPDF" text="Exportar a PDF" onAction="#exportarSalidasAPDF"/>
+	</VBox>
+	
 
     <!-- Botón centrado usando StackPane -->
     <StackPane>
-        <Button fx:id="btnAgregarSalida" onAction="#abrirFormularioAgregarSalida" text="Agregar Salida" />
+        
     </StackPane>
 
     <!-- Tabla de salidas -->

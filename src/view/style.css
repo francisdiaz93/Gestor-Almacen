@@ -1,8 +1,11 @@
 .root {
-    -fx-font-family: "Segoe UI", sans-serif;
-    -fx-font-size: 14px;
-    -fx-background-color: #f4f4f4;
+    -fx-background-color: white;
+    -fx-background-image: url("/application/resources/images/LOGO.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center center;
+    -fx-background-size: auto;
 }
+
 
 .menu-bar {
     -fx-background-color: #e0f0ff;

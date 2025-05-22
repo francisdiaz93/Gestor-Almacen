@@ -25,9 +25,6 @@
             <Menu text="Salidas">
                 <MenuItem text="Ver Salidas" onAction="#mostrarSalidas"/>
             </Menu>
-            <Menu text="Reportes">
-                <MenuItem text="Ver Reportes" onAction="#mostrarReportes"/>
-            </Menu>
             <Menu fx:id="menuAgregar" text= "Agregar Usuario">
             	<MenuItem text="Agregar nuevo usuario" onAction="#registrarUsuarios"/>
             </Menu>

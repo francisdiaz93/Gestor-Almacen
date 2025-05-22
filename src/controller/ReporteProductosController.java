@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.Productos;
+import controller.ExportadorPDF;
 
 import java.util.List;
 
@@ -43,11 +44,18 @@ private void initialize() {
         tablaProductos.setItems(listaProductos);
     }
 
+ // Método que se dispara al presionar el botón "Exportar a PDF"
     @FXML
-    private void exportarPDF() {
-        // Aquí implementamos la exportación a PDF (usando iText o similar)
-    }
+    private void exportarTablaAPDF() {
+        // Obtener lista de productos mostrados en la tabla
+        ObservableList<Productos> productos = tablaProductos.getItems();
 
+        // Obtener la ventana actual para pasar al FileChooser
+        Stage stage = (Stage) tablaProductos.getScene().getWindow();
+
+        // Llamar al método estático de ExportadorPDF
+        ExportadorPDF.exportarProductosAPDF(productos, stage);
+    }
     @FXML
     private void exportarExcel() {
         // Aquí implementamos la exportación a Excel (usando Apache POI o similar)
@@ -58,4 +66,5 @@ private void initialize() {
         Stage stage = (Stage) tablaProductos.getScene().getWindow();
         stage.close();
     }
+
 }

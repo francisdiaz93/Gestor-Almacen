@@ -17,6 +17,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import model.Productos;
 
+
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,12 +28,14 @@ public class ProductsController {
     @FXML private FlowPane contenedorProductos;
 
     private ObservableList<Productos> productList;
+    private ObservableList<Productos> productosMostrados; // Lista de productos visibles (filtrados)
 
     @FXML
     public void initialize() {
         List<Productos> productosBD = ProductosDAO.obtenerProductos();
         productList = FXCollections.observableArrayList(productosBD);
-        mostrarProductos(productList);
+        productosMostrados = FXCollections.observableArrayList(productList);
+        mostrarProductos(productosMostrados);
 
         campoBusqueda.textProperty().addListener((obs, oldText, newText) -> {
             filtrarProductos(newText);
@@ -44,9 +47,10 @@ public class ProductsController {
         List<Productos> filtrados = productList.stream()
             .filter(p -> p.getNombre().get().toLowerCase().contains(lower) ||
                          p.getCategoria().get().toLowerCase().contains(lower) ||
-            			 p.getCodigo().get().toLowerCase().contains(lower))
+                         p.getCodigo().get().toLowerCase().contains(lower))
             .collect(Collectors.toList());
-        mostrarProductos(FXCollections.observableArrayList(filtrados));
+        productosMostrados.setAll(filtrados); // Actualiza la lista visible
+        mostrarProductos(productosMostrados);
     }
 
     private void mostrarProductos(ObservableList<Productos> productos) {
@@ -61,6 +65,7 @@ public class ProductsController {
         VBox tarjeta = new VBox(5);
         tarjeta.setPrefWidth(250);
         tarjeta.setStyle("-fx-border-color: #ccc; -fx-border-radius: 8; -fx-padding: 10; -fx-background-radius: 8; -fx-background-color: #f9f9f9;");
+        tarjeta.setUserData(producto);
 
         Label nombreLabel = new Label(producto.getNombre().get());
         nombreLabel.setFont(new Font("Arial", 16));
@@ -73,11 +78,11 @@ public class ProductsController {
 
         HBox acciones = new HBox(10);
         acciones.setAlignment(Pos.CENTER_RIGHT);
-        
+
         Button btnAgregarEntrada = new Button("➕");
         btnAgregarEntrada.setStyle("-fx-background-color: transparent; -fx-text-fill: green;");
         btnAgregarEntrada.setOnAction(e -> abrirVentanaAgregarEntradaExistente(producto));
-        acciones.getChildren().add(0, btnAgregarEntrada); // Lo añadimos al principio del HBox
+        acciones.getChildren().add(0, btnAgregarEntrada);
 
         Button btnEditar = new Button("✏️");
         btnEditar.setStyle("-fx-background-color: transparent;");
@@ -121,7 +126,8 @@ public class ProductsController {
                 boolean exito = ProductosDAO.eliminarProducto(producto.getId());
                 if (exito) {
                     productList.remove(producto);
-                    mostrarProductos(productList);
+                    productosMostrados.remove(producto);
+                    mostrarProductos(productosMostrados);
                 } else {
                     showAlert("Error", "No se pudo eliminar el producto.");
                 }
@@ -136,14 +142,14 @@ public class ProductsController {
         alerta.setContentText(mensaje);
         alerta.showAndWait();
     }
-    
+
     private void abrirVentanaAgregarEntradaExistente(Productos producto) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AgregarEntradaExistente.fxml"));
             Parent root = loader.load();
 
             AgregarEntradaExistenteController controller = loader.getController();
-            controller.setProducto(producto); // Le pasas el producto correspondiente
+            controller.setProducto(producto);
 
             Stage stage = new Stage();
             stage.setTitle("Agregar Entrada - Producto Existente");
@@ -151,15 +157,15 @@ public class ProductsController {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
 
-            // Refrescar la lista después de agregar entrada
             List<Productos> productosBD = ProductosDAO.obtenerProductos();
             productList.setAll(productosBD);
-            mostrarProductos(productList);
+            productosMostrados.setAll(productList);
+            mostrarProductos(productosMostrados);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
+
     @FXML
     private void abrirVentanaAgregarProductoNuevo(ActionEvent event) {
         try {
@@ -172,14 +178,18 @@ public class ProductsController {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
 
-            // Refrescar productos después de registrar uno nuevo
             List<Productos> productosBD = ProductosDAO.obtenerProductos();
             productList.setAll(productosBD);
-            mostrarProductos(productList);
+            productosMostrados.setAll(productList);
+            mostrarProductos(productosMostrados);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
 
+    @FXML
+    private void onExportarPDF(ActionEvent event) {
+        ExportadorPDF.exportarProductosAPDF(productosMostrados, (Stage) contenedorProductos.getScene().getWindow());
+    }
 }
+

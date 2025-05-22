@@ -47,7 +47,7 @@ public class AddProductController {
 
             // Generar el código basado en el último producto_id
             productoId = obtenerSiguienteProductoId(conn);
-            String codigoGenerado = String.format("PRD%06d", productoId);
+            String codigoGenerado = String.format("P%03d", productoId);
 
             // Insertar nuevo producto
             String sqlInsert = "INSERT INTO productos (nombre, codigo, categoria, descripcion, cantidad, proveedor, fecha_ingreso, marca, stock_minimo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";

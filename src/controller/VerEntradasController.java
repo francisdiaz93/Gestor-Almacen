@@ -12,20 +12,32 @@ import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Entradas;
-import model.Salidas;
 import javafx.scene.control.Button;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.FileChooser;
 
+import org.apache.pdfbox.pdmodel.*;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+
+import java.io.File;
 import java.io.IOException;
 import java.sql.*;
+import java.util.List;
 
 public class VerEntradasController {
 	
 	@FXML
 	private Button cerrarButton;
+	
+	@FXML
+    private Button btnExportarPDF;
+    
     @FXML
     private TableView<Entradas> tableView;
+    
     @FXML
     private TableColumn<Entradas, String> colNombreProducto;
     @FXML
@@ -43,13 +55,15 @@ public class VerEntradasController {
     
     @FXML
     private TextField buscadorTextField;
+    
     private ObservableList<Entradas> listaEntradas;
     
-    // Método para establecer la conexión a la base de datos
+    // --- Conexión DB ---
     private Connection getConnection() throws SQLException {
         return DriverManager.getConnection("jdbc:mysql://localhost:3307/almacen_db", "root", "");
     }
     
+    // Obtener nombre producto por id
     private String obtenerNombreProducto(int productoId) {
         String nombre = "";
         String sql = "SELECT nombre FROM productos WHERE id = ?";
@@ -70,6 +84,7 @@ public class VerEntradasController {
         return nombre;
     }
     
+    // Obtener código producto por id
     private String obtenerCodigoProducto(int productoId) {
         String codigo = "";
         String sql = "SELECT codigo FROM productos WHERE id = ?";
@@ -88,6 +103,27 @@ public class VerEntradasController {
             System.err.println("Error al obtener el código del producto: " + e.getMessage());
         }
         return codigo;
+    }
+    
+    // Obtener nombre usuario por id para reporte PDF
+    private String obtenerNombreUsuario(int usuarioId) {
+        String nombre = "";
+        String sql = "SELECT nombre FROM usuarios WHERE id = ?";
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, usuarioId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                nombre = rs.getString("nombre");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error al obtener el nombre del usuario: " + e.getMessage());
+        }
+        return nombre;
     }
     
     public void cargarEntradas() {
@@ -112,7 +148,6 @@ public class VerEntradasController {
                 entradas.add(entrada);
             }
 
-            // Actualiza la lista global y la tabla
             listaEntradas.clear();
             listaEntradas.addAll(entradas);
             tableView.setItems(listaEntradas);
@@ -144,7 +179,6 @@ public class VerEntradasController {
         tableView.setItems(listaFiltrada);
     }
 
-
     @FXML
     public void initialize() {
         listaEntradas = FXCollections.observableArrayList();
@@ -167,13 +201,142 @@ public class VerEntradasController {
 
         tableView.setItems(listaEntradas);
 
-        // Listener para filtrar cuando escribes en el TextField
+        // Listener para filtrar entradas según texto
         buscadorTextField.textProperty().addListener((obs, oldText, newText) -> filtrarEntradas(newText));
+        
+        // Asocia el botón de exportar PDF
+        btnExportarPDF.setOnAction(event -> exportarEntradasAPDF());
     }
-
     
     @FXML
-    private void abrirFormularioAgregarEntrada() {
+    private void exportarEntradasAPDF() {
+        List<Entradas> entradasVisibles = tableView.getItems();
+
+        try (PDDocument document = new PDDocument()) {
+            PDRectangle landscape = new PDRectangle(PDRectangle.LETTER.getHeight(), PDRectangle.LETTER.getWidth());
+            PDPage page = new PDPage(landscape);
+            document.addPage(page);
+
+            PDPageContentStream contentStream = new PDPageContentStream(document, page);
+
+            // Título
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 14);
+            contentStream.beginText();
+            contentStream.newLineAtOffset(50, landscape.getHeight() - 50);
+            contentStream.showText("Reporte de Entradas");
+            contentStream.endText();
+
+            float margin = 50;
+            float yStart = landscape.getHeight() - 80;
+            float yPosition = yStart;
+            float rowHeight = 20;
+            float tableWidth = landscape.getWidth() - 2 * margin;
+
+            // NUEVO ORDEN DE COLUMNAS
+            String[] columnas = {"Fecha Ingreso", "ID", "Producto", "Proveedor", "Cantidad", "Factura"};
+            float[] colProportions = {0.22f, 0.08f, 0.24f, 0.20f, 0.12f, 0.14f};
+
+            float[] colWidths = new float[colProportions.length];
+            for (int i = 0; i < colProportions.length; i++) {
+                colWidths[i] = tableWidth * colProportions[i];
+            }
+
+            // Encabezados
+            yPosition -= rowHeight;
+            float xPosition = margin;
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 10);
+            for (int i = 0; i < columnas.length; i++) {
+                contentStream.beginText();
+                contentStream.newLineAtOffset(xPosition + 2, yPosition + 5);
+                contentStream.showText(columnas[i]);
+                contentStream.endText();
+                xPosition += colWidths[i];
+            }
+
+            // Línea bajo encabezados
+            contentStream.moveTo(margin, yPosition);
+            contentStream.lineTo(margin + tableWidth, yPosition);
+            contentStream.stroke();
+
+            yPosition -= rowHeight;
+            contentStream.setFont(PDType1Font.HELVETICA, 10);
+
+            for (Entradas entrada : entradasVisibles) {
+                if (yPosition < margin) {
+                    contentStream.close();
+
+                    page = new PDPage(landscape);
+                    document.addPage(page);
+                    contentStream = new PDPageContentStream(document, page);
+
+                    yPosition = yStart;
+
+                    // Redibujar encabezados en nueva página
+                    xPosition = margin;
+                    contentStream.setFont(PDType1Font.HELVETICA_BOLD, 10);
+                    for (int i = 0; i < columnas.length; i++) {
+                        contentStream.beginText();
+                        contentStream.newLineAtOffset(xPosition + 2, yPosition + 5);
+                        contentStream.showText(columnas[i]);
+                        contentStream.endText();
+                        xPosition += colWidths[i];
+                    }
+                    contentStream.moveTo(margin, yPosition);
+                    contentStream.lineTo(margin + tableWidth, yPosition);
+                    contentStream.stroke();
+
+                    yPosition -= rowHeight;
+                    contentStream.setFont(PDType1Font.HELVETICA, 10);
+                }
+
+                xPosition = margin;
+
+                // NUEVO ORDEN DE VALORES
+                String fechaIngreso = entrada.getFechaIngreso() != null ? entrada.getFechaIngreso().toString() : "";
+                String id = String.valueOf(entrada.getId());
+                String producto = obtenerNombreProducto(entrada.getProductoId());
+                String proveedor = entrada.getProveedor() != null ? entrada.getProveedor() : "";
+                String cantidad = String.valueOf(entrada.getCantidad());
+                String factura = entrada.getNumeroFactura() != null ? entrada.getNumeroFactura() : "";
+
+                String[] valores = {fechaIngreso, id, producto, proveedor, cantidad, factura};
+
+                for (int i = 0; i < valores.length; i++) {
+                    contentStream.beginText();
+                    contentStream.newLineAtOffset(xPosition + 2, yPosition + 5);
+                    contentStream.showText(valores[i]);
+                    contentStream.endText();
+                    xPosition += colWidths[i];
+                }
+
+                yPosition -= rowHeight;
+            }
+
+            contentStream.close();
+
+            // Guardar PDF
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Guardar reporte PDF");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Archivo PDF", "*.pdf"));
+            File archivo = fileChooser.showSaveDialog(tableView.getScene().getWindow());
+
+            if (archivo != null) {
+                document.save(archivo);
+            }
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void cerrarVentana() {
+    	Stage stage = (Stage) cerrarButton.getScene().getWindow();
+    	stage.close();
+    }
+    
+    @FXML
+    private void abrirFormularioAgregarEntrada(javafx.event.ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AddProductView.fxml"));
             Parent root = loader.load();

@@ -39,11 +39,6 @@ public class MainController {
     }
 
     @FXML
-    private void mostrarReportes() {
-        cargarVista("/view/ReportesView.fxml");
-    }
-
-    @FXML
     private void registrarUsuarios() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/registro.fxml"));

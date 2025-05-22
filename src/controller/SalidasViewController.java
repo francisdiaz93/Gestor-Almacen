@@ -21,6 +21,21 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Date;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+
+import javafx.stage.FileChooser;
+import java.io.File;
+
 
 public class SalidasViewController {
 
@@ -37,6 +52,7 @@ public class SalidasViewController {
     @FXML private TextField buscarField;
 
     @FXML private Button btnAgregarSalida;
+    @FXML private Button btnExportarPDF;
 
     @FXML private TextField codigoProductoField;
     @FXML private TextField departamentoField;
@@ -50,6 +66,9 @@ public class SalidasViewController {
     public void initialize() {
         listaSalidas = FXCollections.observableArrayList();
         cargarSalidas();
+        
+        btnExportarPDF.setOnAction(e -> exportarSalidasAPDF());
+
 
         colCodigoProducto.setCellValueFactory(data ->
             new SimpleStringProperty(obtenerCodigoProducto(data.getValue().getProductoId()))
@@ -86,9 +105,10 @@ public class SalidasViewController {
 
         for (Salidas s : listaSalidas) {
             String nombreProducto = obtenerNombreProducto(s.getProductoId()).toLowerCase();
-            String numeroFactura = s.getNumeroFactura().toLowerCase();
+            String numeroFactura = s.getNumeroFactura() != null ? s.getNumeroFactura().toLowerCase() : "";
+            String departamento = s.getDepartamento() != null ? s.getDepartamento().toLowerCase() : "";
 
-            if (nombreProducto.contains(filtroLower) || numeroFactura.contains(filtroLower)) {
+            if (nombreProducto.contains(filtroLower) || numeroFactura.contains(filtroLower) || departamento.contains(filtroLower)) {
                 listaFiltrada.add(s);
             }
         }
@@ -300,5 +320,130 @@ public class SalidasViewController {
             e.printStackTrace();
         }
     }
+    
+    @FXML
+    private void exportarSalidasAPDF() {
+    	List<Salidas> salidasVisibles = new ArrayList<>(salidasTable.getItems()); // tu lista con las salidas
+
+        try (PDDocument document = new PDDocument()) {
+            PDRectangle landscape = new PDRectangle(PDRectangle.LETTER.getHeight(), PDRectangle.LETTER.getWidth());
+            PDPage page = new PDPage(landscape);
+            document.addPage(page);
+
+            PDPageContentStream contentStream = new PDPageContentStream(document, page);
+
+            // Título
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 14);
+            contentStream.beginText();
+            contentStream.newLineAtOffset(50, landscape.getHeight() - 50);
+            contentStream.showText("Reporte de Salidas");
+            contentStream.endText();
+
+            float margin = 50;
+            float yStart = landscape.getHeight() - 80;
+            float yPosition = yStart;
+            float rowHeight = 20;
+            float tableWidth = landscape.getWidth() - 2 * margin;
+
+            // Columnas para Salidas
+            String[] columnas = {"Fecha Salida", "ID", "Producto", "Departamento", "Motivo", "Factura", "Cantidad"};
+            float[] colProportions = {0.10f, 0.06f, 0.26f, 0.16f, 0.15f, 0.20f, 0.08f};
+
+            float[] colWidths = new float[colProportions.length];
+            for (int i = 0; i < colProportions.length; i++) {
+                colWidths[i] = tableWidth * colProportions[i];
+            }
+
+            // Encabezados
+            yPosition -= rowHeight;
+            float xPosition = margin;
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 10);
+            for (int i = 0; i < columnas.length; i++) {
+                contentStream.beginText();
+                contentStream.newLineAtOffset(xPosition + 2, yPosition + 5);
+                contentStream.showText(columnas[i]);
+                contentStream.endText();
+                xPosition += colWidths[i];
+            }
+
+            // Línea bajo encabezados
+            contentStream.moveTo(margin, yPosition);
+            contentStream.lineTo(margin + tableWidth, yPosition);
+            contentStream.stroke();
+
+            yPosition -= rowHeight;
+            contentStream.setFont(PDType1Font.HELVETICA, 10);
+
+            for (Salidas salida : salidasVisibles) {
+                if (yPosition < margin) {
+                    contentStream.close();
+
+                    page = new PDPage(landscape);
+                    document.addPage(page);
+                    contentStream = new PDPageContentStream(document, page);
+
+                    yPosition = yStart;
+
+                    // Redibujar encabezados en nueva página
+                    xPosition = margin;
+                    contentStream.setFont(PDType1Font.HELVETICA_BOLD, 10);
+                    for (int i = 0; i < columnas.length; i++) {
+                        contentStream.beginText();
+                        contentStream.newLineAtOffset(xPosition + 2, yPosition + 5);
+                        contentStream.showText(columnas[i]);
+                        contentStream.endText();
+                        xPosition += colWidths[i];
+                    }
+                    contentStream.moveTo(margin, yPosition);
+                    contentStream.lineTo(margin + tableWidth, yPosition);
+                    contentStream.stroke();
+
+                    yPosition -= rowHeight;
+                    contentStream.setFont(PDType1Font.HELVETICA, 10);
+                }
+
+                xPosition = margin;
+
+                // Convertir fecha salida a String usando toString() para solo fecha sin hora
+                String fechaSalida = salida.getFechaSalida() != null ? salida.getFechaSalida().toString() : "";
+                String id = String.valueOf(salida.getId());
+                String producto = obtenerNombreProducto(salida.getProductoId());
+                String departamento = salida.getDepartamento() != null ? salida.getDepartamento() : "";
+                String motivo = salida.getMotivo() != null ? salida.getMotivo() : "";
+                String factura = salida.getNumeroFactura() != null ? salida.getNumeroFactura() : "";
+                String cantidad = String.valueOf(salida.getCantidad());
+
+                String[] valores = {fechaSalida, id, producto, departamento, motivo, factura, cantidad};
+
+                for (int i = 0; i < valores.length; i++) {
+                    contentStream.beginText();
+                    contentStream.newLineAtOffset(xPosition + 2, yPosition + 5);
+                    contentStream.showText(valores[i]);
+                    contentStream.endText();
+                    xPosition += colWidths[i];
+                }
+
+                yPosition -= rowHeight;
+            }
+
+            contentStream.close();
+
+            // Guardar PDF
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Guardar reporte PDF");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Archivo PDF", "*.pdf"));
+            File archivo = fileChooser.showSaveDialog(salidasTable.getScene().getWindow());
+
+            if (archivo != null) {
+                document.save(archivo);
+                mostrarAlerta("Exportación exitosa", "Reporte de salidas exportado correctamente.");
+            }
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            mostrarAlerta("Error", "Error al exportar el reporte de salidas.");
+        }
+    }
+
 }
 

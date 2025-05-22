@@ -21,12 +21,15 @@
                promptText="Filtrar por nombre o factura."
                prefWidth="400"/>
 	</HBox>
-            <!-- Botón centrado -->
-            <StackPane>
-                <Button fx:id="btnAgregarEntrada" text="Agregar Entrada" onAction="#abrirFormularioAgregarEntrada"/>
-            </StackPane>
+		<VBox alignment="CENTER" spacing="10" layoutX="20" layoutY="20">
+    	<Button fx:id="btnAgregarEntrada" text="Agregar Entrada" onAction="#abrirFormularioAgregarEntrada"/>
+    	<Button fx:id="btnExportarPDF" text="Exportar a PDF" onAction="#exportarEntradasAPDF"/>
+	</VBox>
 
-            <!-- Tabla de entradas que crece con el espacio -->
+                
+                
+
+     <!-- Tabla de entradas que crece con el espacio -->
             <TableView fx:id="tableView" prefWidth="900.0" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="colFechaIngreso" text="Fecha Ingreso" prefWidth="150" />

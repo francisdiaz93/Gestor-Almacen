@@ -24,6 +24,7 @@
      <!--  Agregar nuevo producto -->
      
      <Button fx:id="btnAgregarEntrada" text="Agregar Producto Nuevo" onAction="#abrirVentanaAgregarProductoNuevo"/>
+     <Button text="Exportar a PDF" onAction="#onExportarPDF"/>
 
     <!-- Scroll con productos como tarjetas -->
 

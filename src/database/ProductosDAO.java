@@ -291,7 +291,7 @@ public class ProductosDAO {
     
     public static List<Productos> obtenerProductosConStock() {
         List<Productos> lista = new ArrayList<>();
-        String sql = "SELECT * FROM productos WHERE stock > 0";
+        String sql = "SELECT * FROM productos WHERE cantidad > 0";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -303,7 +303,7 @@ public class ProductosDAO {
                 p.setCodigo(rs.getString("codigo"));
                 p.setNombre(rs.getString("nombre"));
                 p.setCategoria(rs.getString("categoria"));
-                p.setStock(rs.getInt("stock"));
+                p.setStock(rs.getInt("cantidad"));
                 p.setProveedor(rs.getString("proveedor"));
                 p.setMarca(rs.getString("marca"));
                 lista.add(p);

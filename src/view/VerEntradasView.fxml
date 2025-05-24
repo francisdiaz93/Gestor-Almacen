@@ -30,7 +30,8 @@
                 
 
      <!-- Tabla de entradas que crece con el espacio -->
-            <TableView fx:id="tableView" prefWidth="900.0" VBox.vgrow="ALWAYS">
+     <HBox alignment="TOP_CENTER" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent;">
+            <TableView fx:id="tableView" >
                 <columns>
                     <TableColumn fx:id="colFechaIngreso" text="Fecha Ingreso" prefWidth="150" />
                     <TableColumn fx:id="colNombreProducto" text="Nombre" prefWidth="250" />
@@ -39,9 +40,9 @@
                     <TableColumn fx:id="colProveedor" text="Proveedor" prefWidth="150" />
                     <TableColumn fx:id="colNumeroFactura" text="Nº Factura" prefWidth="150" />
                     <TableColumn fx:id="colObservaciones" text="Observaciones" prefWidth="200" />
-                </columns>
-            </TableView>
-
+        		</columns>
+   		 </TableView>
+	</HBox>
         </VBox>
     </children>
 </AnchorPane>

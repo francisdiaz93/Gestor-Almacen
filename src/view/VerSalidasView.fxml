@@ -33,11 +33,11 @@
         
     </StackPane>
 
-    <!-- Tabla de salidas -->
-    <TableView fx:id="salidasTable" prefWidth="900.0" VBox.vgrow="ALWAYS">
+<HBox alignment="TOP_CENTER" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent;">
+    <TableView fx:id="salidasTable" >
         <columns>
             <TableColumn fx:id="colFecha" text="Fecha Salida" prefWidth="100"/>
-        	<TableColumn fx:id="colNombreProducto" text="Nombre" prefWidth="200"/>
+            <TableColumn fx:id="colNombreProducto" text="Nombre" prefWidth="200"/>
             <TableColumn fx:id="colCodigoProducto" text="Código Producto" prefWidth="120"/>
             <TableColumn fx:id="colCantidad" text="Cantidad" prefWidth="80"/>
             <TableColumn fx:id="colDepartamento" text="Departamento" prefWidth="120"/>
@@ -45,5 +45,6 @@
             <TableColumn fx:id="colNumeroFactura" text="N° Factura" prefWidth="180"/>
         </columns>
     </TableView>
+</HBox>
 
 </VBox>

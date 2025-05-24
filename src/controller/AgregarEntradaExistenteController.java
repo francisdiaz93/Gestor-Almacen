@@ -1,23 +1,14 @@
 package controller;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.ComboBoxListCell;
 import javafx.stage.Stage;
 import model.Entradas;
 import model.Productos;
 import database.EntradasDAO;
 import database.ProductosDAO;
-import controller.Sesion;
-
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.time.LocalDate;
-import java.util.List;
+
 
 public class AgregarEntradaExistenteController {
 

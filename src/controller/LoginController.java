@@ -8,6 +8,7 @@ import database.DatabaseConnection;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
@@ -19,6 +20,8 @@ public class LoginController {
 	    @FXML private TextField txtUsuario;  // Campo para ingresar el usuario
 	    @FXML private PasswordField txtContrasena;  // Campo para ingresar la contraseña
 	    @FXML private Label lblMensaje;  // Label para mostrar mensajes de error o éxito
+	    @FXML
+	    private AnchorPane rootPane;
 
 	    // Método que se ejecuta cuando el usuario hace clic en el botón "Iniciar sesión"
 	    @FXML

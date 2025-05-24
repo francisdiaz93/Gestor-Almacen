@@ -56,21 +56,6 @@ public class MainController {
             System.out.println("Error al abrir registro.fxml: " + e.getMessage());
         }
     }
-    
-   /* @FXML
-    private void abrirVerEntradas() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/VerEntradasView.fxml"));
-            Parent root = loader.load();
-            Stage stage = new Stage();
-            stage.setTitle("Listado de Entradas");
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }*/
 
     @FXML
     private void abrirAgregarEntrada() {
@@ -166,7 +151,7 @@ public class MainController {
     @FXML
     private void initialize() {
     	
-    	cargarVista("/view/ProductsView.fxml");
+    	cargarVista("/view/HomeView.fxml");
     	
     	System.out.println("ROL ACTUAL: " + Sesion.getRolUsuario()); // << DEBUG
         // Verificar el rol del usuario actual y actualizar el menú

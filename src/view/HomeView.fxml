@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="controller.HomeController">
+    <center>
+        <VBox alignment="CENTER" spacing="20.0">
+        <padding>
+        		<Insets top="20" right="20" bottom="20" left="20" />
+    	 </padding>
+            <ImageView fx:id="logoImageView" fitHeight="100" fitWidth="100" />
+            <Label text="Sistema de Gestión de Almacén" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+            <Label text="Bienvenido, gestiona tus productos con eficiencia." />
+        </VBox>
+    </center>
+</BorderPane>

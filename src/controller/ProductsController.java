@@ -26,6 +26,7 @@ public class ProductsController {
 
     @FXML private TextField campoBusqueda;
     @FXML private FlowPane contenedorProductos;
+    @FXML private Button btnAgregarEntrada;
 
     private ObservableList<Productos> productList;
     private ObservableList<Productos> productosMostrados; // Lista de productos visibles (filtrados)

@@ -26,25 +26,24 @@
     	<Button fx:id="btnAgregarSalida" onAction="#abrirFormularioAgregarSalida" text="Agregar Salida" />
     	<Button fx:id="btnExportarPDF" text="Exportar a PDF" onAction="#exportarSalidasAPDF"/>
 	</VBox>
+	<HBox spacing="10" alignment="CENTER_LEFT">
+    	<Label text="Categoría:" />
+    	<ComboBox fx:id="categoriaComboBox" prefWidth="150"/>
+	</HBox>
+
+	<HBox alignment="TOP_CENTER" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent;">
+	    <TableView fx:id="salidasTable" >
+	        <columns>
+	            <TableColumn fx:id="colFecha" text="Fecha Salida" prefWidth="100"/>
+	            <TableColumn fx:id="colNombreProducto" text="Nombre" prefWidth="200"/>
+	            <TableColumn fx:id="colCodigoProducto" text="Código Producto" prefWidth="120"/>
+	            <TableColumn fx:id="colCategoria" text="Categoría" prefWidth="200"/>
+	            <TableColumn fx:id="colCantidad" text="Cantidad" prefWidth="80"/>
+	            <TableColumn fx:id="colDepartamento" text="Departamento" prefWidth="120"/>
+	            <TableColumn fx:id="colMotivo" text="Motivo" prefWidth="150"/>
+	            <TableColumn fx:id="colNumeroFactura" text="N° Factura" prefWidth="180"/>
+	        </columns>
+	    </TableView>
+	</HBox>
 	
-
-    <!-- Botón centrado usando StackPane -->
-    <StackPane>
-        
-    </StackPane>
-
-<HBox alignment="TOP_CENTER" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent;">
-    <TableView fx:id="salidasTable" >
-        <columns>
-            <TableColumn fx:id="colFecha" text="Fecha Salida" prefWidth="100"/>
-            <TableColumn fx:id="colNombreProducto" text="Nombre" prefWidth="200"/>
-            <TableColumn fx:id="colCodigoProducto" text="Código Producto" prefWidth="120"/>
-            <TableColumn fx:id="colCantidad" text="Cantidad" prefWidth="80"/>
-            <TableColumn fx:id="colDepartamento" text="Departamento" prefWidth="120"/>
-            <TableColumn fx:id="colMotivo" text="Motivo" prefWidth="150"/>
-            <TableColumn fx:id="colNumeroFactura" text="N° Factura" prefWidth="180"/>
-        </columns>
-    </TableView>
-</HBox>
-
-</VBox>
+	</VBox>

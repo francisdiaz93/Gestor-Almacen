@@ -55,7 +55,7 @@ public class AgregarEntradaExistenteController {
             entrada.setProveedor(producto.getProveedor().get());
 
             EntradasDAO.insertarEntrada(entrada);
-            ProductosDAO.actualizarCantidadProducto(producto.getId(), cantidad);
+            //ProductosDAO.actualizarCantidadProducto(producto.getId(), cantidad);
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Registro exitoso");

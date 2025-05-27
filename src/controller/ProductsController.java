@@ -17,7 +17,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import model.Productos;
 
-
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,7 +28,7 @@ public class ProductsController {
     @FXML private Button btnAgregarEntrada;
 
     private ObservableList<Productos> productList;
-    private ObservableList<Productos> productosMostrados; // Lista de productos visibles (filtrados)
+    private ObservableList<Productos> productosMostrados; // Lista visible (filtrados)
 
     @FXML
     public void initialize() {
@@ -50,7 +49,7 @@ public class ProductsController {
                          p.getCategoria().get().toLowerCase().contains(lower) ||
                          p.getCodigo().get().toLowerCase().contains(lower))
             .collect(Collectors.toList());
-        productosMostrados.setAll(filtrados); // Actualiza la lista visible
+        productosMostrados.setAll(filtrados);
         mostrarProductos(productosMostrados);
     }
 
@@ -65,7 +64,14 @@ public class ProductsController {
     private VBox crearTarjetaProducto(Productos producto) {
         VBox tarjeta = new VBox(5);
         tarjeta.setPrefWidth(250);
-        tarjeta.setStyle("-fx-border-color: #ccc; -fx-border-radius: 8; -fx-padding: 10; -fx-background-radius: 8; -fx-background-color: #f9f9f9;");
+        
+        // Cambiar el estilo según stock mínimo
+        if (producto.getStock().get() < producto.getStockMinimo().get()) {
+            tarjeta.setStyle("-fx-border-color: #ccc; -fx-border-radius: 8; -fx-padding: 10; -fx-background-radius: 8; -fx-background-color: #ffcccc;");
+        } else {
+            tarjeta.setStyle("-fx-border-color: #ccc; -fx-border-radius: 8; -fx-padding: 10; -fx-background-radius: 8; -fx-background-color: #f9f9f9;");
+        }
+
         tarjeta.setUserData(producto);
 
         Label nombreLabel = new Label(producto.getNombre().get());
@@ -120,7 +126,7 @@ public class ProductsController {
         Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
         confirmacion.setTitle("Confirmar Eliminación");
         confirmacion.setHeaderText(null);
-        confirmacion.setContentText("¿Seguro que quieres eliminar el producto: " + producto.getNombre() + "?");
+        confirmacion.setContentText("¿Seguro que quieres eliminar el producto: " + producto.getNombre().get() + "?");
 
         confirmacion.showAndWait().ifPresent(respuesta -> {
             if (respuesta == ButtonType.OK) {
@@ -158,6 +164,7 @@ public class ProductsController {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
 
+            // Actualizar productos luego de agregar entrada
             List<Productos> productosBD = ProductosDAO.obtenerProductos();
             productList.setAll(productosBD);
             productosMostrados.setAll(productList);
@@ -192,5 +199,7 @@ public class ProductsController {
     private void onExportarPDF(ActionEvent event) {
         ExportadorPDF.exportarProductosAPDF(productosMostrados, (Stage) contenedorProductos.getScene().getWindow());
     }
+
 }
+
 

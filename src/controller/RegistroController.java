@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -35,10 +36,10 @@ public class RegistroController{
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+            String contraseñaHasheada = BCrypt.hashpw(contraseña, BCrypt.gensalt());
         	stmt.setString(1, nombre);
             stmt.setString(2, usuario);
-            stmt.setString(3, contraseña);
+            stmt.setString(3, contraseñaHasheada);
             stmt.setString(4, rol);
             stmt.executeUpdate();
 

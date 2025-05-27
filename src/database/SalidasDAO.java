@@ -24,7 +24,7 @@ public class SalidasDAO {
                 Salidas s = new Salidas();
                 s.setId(rs.getInt("id"));
                 s.setProductoId(rs.getInt("producto_id"));
-                s.setDepartamento(rs.getString("cliente"));
+                s.setDepartamento(rs.getString("departamento"));
                 s.setCantidad(rs.getInt("cantidad"));
                 s.setFechaSalida(rs.getDate("fecha_salida"));
                 s.setMotivo(rs.getString("motivo"));
@@ -39,7 +39,7 @@ public class SalidasDAO {
     }
 
     public static boolean agregarSalida(Salidas salida) throws SQLException {
-        String sqlInsert = "INSERT INTO salidas (producto_id, cliente, cantidad, fecha_salida, motivo, usuario_id, numeroFactura) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sqlInsert = "INSERT INTO salidas (producto_id, departamento, cantidad, fecha_salida, motivo, usuario_id, numeroFactura) VALUES (?, ?, ?, ?, ?, ?, ?)";
         String sqlUpdateStock = "UPDATE productos SET cantidad = cantidad - ? WHERE id = ? AND cantidad >= ?";
 
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS)) {

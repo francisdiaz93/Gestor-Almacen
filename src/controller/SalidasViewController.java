@@ -20,6 +20,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -48,6 +49,7 @@ public class SalidasViewController {
     @FXML private TableColumn<Salidas, String> colFecha;
     @FXML private TableColumn<Salidas, String> colMotivo;
     @FXML private TableColumn<Salidas, String> colNumeroFactura;
+    @FXML private TableColumn<Salidas, String> colCategoria;
 
     @FXML private TextField buscarField;
 
@@ -59,6 +61,9 @@ public class SalidasViewController {
     @FXML private TextField cantidadField;
     @FXML private DatePicker fechaSalidaPicker;
     @FXML private TextField motivoField;
+    
+    @FXML private ComboBox<String> categoriaComboBox;
+    
 
     private ObservableList<Salidas> listaSalidas;
 
@@ -81,6 +86,9 @@ public class SalidasViewController {
         colFecha.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getFechaSalida().toString()));
         colMotivo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMotivo()));
         colNumeroFactura.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNumeroFactura()));
+        colCategoria.setCellValueFactory(data -> 
+        new SimpleStringProperty(obtenerCategoriaProducto(data.getValue().getProductoId()))
+    );
 
         salidasTable.setItems(listaSalidas);
 
@@ -88,6 +96,9 @@ public class SalidasViewController {
         buscarField.textProperty().addListener((observable, oldValue, newValue) -> {
             filtrarSalidas(newValue);
         });
+        cargarCategorias();
+        llenarCategorias();
+        categoriaComboBox.setOnAction(e -> filtrarPorCategoria());
     }
 
     private void cargarSalidas() {
@@ -445,5 +456,86 @@ public class SalidasViewController {
         }
     }
 
+    private void cargarCategorias() {
+        ObservableList<String> categorias = FXCollections.observableArrayList();
+
+        String sql = "SELECT DISTINCT categoria FROM productos";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                String categoria = rs.getString("categoria");
+                if (categoria != null && !categoria.isEmpty()) {
+                    categorias.add(categoria);
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error al cargar categorías: " + e.getMessage());
+        }
+
+        categoriaComboBox.setItems(categorias);
+    }
+    
+    private String obtenerCategoriaProducto(int productoId) {
+        String categoria = "";
+        String sql = "SELECT categoria FROM productos WHERE id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, productoId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                categoria = rs.getString("categoria");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error al obtener la categoría del producto: " + e.getMessage());
+        }
+        return categoria;
+    }
+    
+    private void llenarCategorias() {
+        categoriaComboBox.getItems().clear();
+        categoriaComboBox.getItems().add("Todas"); // Opción para ver todo
+
+        String sql = "SELECT DISTINCT categoria FROM productos";
+        try (Connection conn = DatabaseConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                categoriaComboBox.getItems().add(rs.getString("categoria"));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al cargar categorías: " + e.getMessage());
+        }
+
+        categoriaComboBox.setValue("Todas");
+    }
+    
+    private void filtrarPorCategoria() {
+        String categoriaSeleccionada = categoriaComboBox.getValue();
+
+        if (categoriaSeleccionada == null || categoriaSeleccionada.equals("Todas")) {
+            salidasTable.setItems(listaSalidas);
+            return;
+        }
+
+        ObservableList<Salidas> filtradas = FXCollections.observableArrayList();
+
+        for (Salidas salida : listaSalidas) {
+            String categoriaProducto = obtenerCategoriaProducto(salida.getProductoId());
+            if (categoriaProducto.equals(categoriaSeleccionada)) {
+                filtradas.add(salida);
+            }
+        }
+
+        salidasTable.setItems(filtradas);
+    }
 }
 

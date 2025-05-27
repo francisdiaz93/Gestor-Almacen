@@ -3,6 +3,7 @@ package controller;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import org.mindrot.jbcrypt.BCrypt;
 
 import database.DatabaseConnection;
 import javafx.event.ActionEvent;
@@ -26,51 +27,47 @@ public class LoginController {
 	    // Método que se ejecuta cuando el usuario hace clic en el botón "Iniciar sesión"
 	    @FXML
 	    private void handleLogin(ActionEvent event) {
-	        // Obtener los valores ingresados por el usuario
 	        String usuario = txtUsuario.getText();
 	        String contrasena = txtContrasena.getText();
 
-	        // Validar si los campos no están vacíos
 	        if (usuario.isEmpty() || contrasena.isEmpty()) {
 	            lblMensaje.setText("Rellena todos los campos.");
 	            return;
 	        }
 
-	        // Conexión a la base de datos y validación de las credenciales
 	        try (Connection conn = DatabaseConnection.getConnection()) {
-
-	            // Consulta SQL para verificar las credenciales en la base de datos
-	            String query = "SELECT * FROM usuarios WHERE usuario = ? AND contraseña = ?";
+	            String query = "SELECT * FROM usuarios WHERE usuario = ?";
 	            PreparedStatement stmt = conn.prepareStatement(query);
-	            stmt.setString(1, usuario);  // Establecer el nombre de usuario en la consulta
-	            stmt.setString(2, contrasena);  // Establecer la contraseña en la consulta
+	            stmt.setString(1, usuario);
 
-	            // Ejecutar la consulta
 	            ResultSet rs = stmt.executeQuery();
 
-	            // Si se encuentran los resultados (usuario y contraseña coinciden)
 	            if (rs.next()) {
-	                int idUsuario = rs.getInt("id");  // Obtener id del usuario
-	                String nombreUsuario = rs.getString("nombre");
-	                String rol = rs.getString("rol");
+	                String contrasenaHasheada = rs.getString("contraseña"); // O el nombre correcto de columna
 
-	                Sesion.iniciarSesion(idUsuario, nombreUsuario, rol);
+	                if (BCrypt.checkpw(contrasena, contrasenaHasheada)) {
+	                    int idUsuario = rs.getInt("id");
+	                    String nombreUsuario = rs.getString("nombre");
+	                    String rol = rs.getString("rol");
 
-	                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainView.fxml"));
-	                Parent root = loader.load();
-	                Stage stage = (Stage) txtUsuario.getScene().getWindow();
-	                Scene scene = new Scene(root);
-	                stage.setScene(scene);
-	                stage.setMaximized(true);
-	                stage.show();
-	            
+	                    Sesion.iniciarSesion(idUsuario, nombreUsuario, rol);
+
+	                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainView.fxml"));
+	                    Parent root = loader.load();
+	                    Stage stage = (Stage) txtUsuario.getScene().getWindow();
+	                    Scene scene = new Scene(root);
+	                    stage.setScene(scene);
+	                    stage.setMaximized(true);
+	                    stage.show();
+
+	                } else {
+	                    lblMensaje.setText("Credenciales incorrectas.");
+	                }
 	            } else {
-	                // Si las credenciales no son correctas, mostrar mensaje de error
 	                lblMensaje.setText("Credenciales incorrectas.");
 	            }
 
 	        } catch (Exception e) {
-	            // Si hay algún error de conexión o en la consulta, mostrar mensaje de error
 	            e.printStackTrace();
 	            lblMensaje.setText("Error de conexión.");
 	        }

@@ -114,6 +114,17 @@ public class AgregarSalidaController {
             ProductosDAO.actualizarProducto(producto);
 
             mostrarAlerta(Alert.AlertType.INFORMATION, "Salida registrada", "La salida se registró correctamente.");
+
+            // <-- Aquí agrego la verificación y advertencia si el stock queda bajo
+            if (nuevoStock < producto.getStockMinimo().get()) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Advertencia de Stock Bajo");
+                alert.setHeaderText("Stock bajo después de la salida");
+                alert.setContentText("El producto '" + producto.getNombre().get() + "' ahora tiene stock bajo (" + nuevoStock + ").");
+                alert.showAndWait();
+            }
+            // <-- fin de la adición
+
             cerrarVentana();
         } else {
             mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo registrar la salida.");
@@ -138,37 +149,38 @@ public class AgregarSalidaController {
         stage.close();
     }
 
-	@FXML
-	private void abrirSelectorProductos() {
-	    try {
-	        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SeleccionarProductoView.fxml"));
-	        Parent root = loader.load();
-	
-	        // Obtener controlador de la ventana de selección
-	        SeleccionarProductoController selectorController = loader.getController();
-	
-	        Stage stage = new Stage();
-	        stage.setTitle("Seleccionar producto");
-	        stage.setScene(new Scene(root));
-	        stage.initModality(Modality.APPLICATION_MODAL);
-	        stage.showAndWait();
-	
-	        // Obtener producto seleccionado
-	        Productos productoSeleccionado = selectorController.getProductoSeleccionado();
-	
-	        if (productoSeleccionado != null) {
-	            codigoProductoField.setText(productoSeleccionado.getCodigo().get());
-	        }
-	
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	        mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo abrir la ventana de selección de productos.");
-	    }
-	}
-	
-	private String generarNumeroFactura() {
-	    LocalDateTime now = LocalDateTime.now();
-	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-	    return "FAC-" + now.format(formatter);
-	}
+    @FXML
+    private void abrirSelectorProductos() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SeleccionarProductoView.fxml"));
+            Parent root = loader.load();
+
+            // Obtener controlador de la ventana de selección
+            SeleccionarProductoController selectorController = loader.getController();
+
+            Stage stage = new Stage();
+            stage.setTitle("Seleccionar producto");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+            // Obtener producto seleccionado
+            Productos productoSeleccionado = selectorController.getProductoSeleccionado();
+
+            if (productoSeleccionado != null) {
+                codigoProductoField.setText(productoSeleccionado.getCodigo().get());
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo abrir la ventana de selección de productos.");
+        }
+    }
+
+    private String generarNumeroFactura() {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        return "FAC-" + now.format(formatter);
+    }
 }
+

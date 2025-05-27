@@ -21,13 +21,14 @@
                promptText="Filtrar por nombre o factura."
                prefWidth="400"/>
 	</HBox>
-		<VBox alignment="CENTER" spacing="10" layoutX="20" layoutY="20">
+	<VBox alignment="CENTER" spacing="10" layoutX="20" layoutY="20">
     	<Button fx:id="btnAgregarEntrada" text="Agregar Entrada" onAction="#abrirFormularioAgregarEntrada"/>
     	<Button fx:id="btnExportarPDF" text="Exportar a PDF" onAction="#exportarEntradasAPDF"/>
 	</VBox>
-
-                
-                
+	<HBox alignment="CENTER_LEFT" spacing="10">
+    	<Label text="Categoría:" />
+    	<ComboBox fx:id="comboCategoriaFiltro" promptText="Todas" prefWidth="200"/>
+	</HBox>         
 
      <!-- Tabla de entradas que crece con el espacio -->
      <HBox alignment="TOP_CENTER" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent;">
@@ -36,6 +37,7 @@
                     <TableColumn fx:id="colFechaIngreso" text="Fecha Ingreso" prefWidth="150" />
                     <TableColumn fx:id="colNombreProducto" text="Nombre" prefWidth="250" />
                     <TableColumn fx:id="colCodigoProducto" text="Producto ID" prefWidth="100" />
+                    <TableColumn fx:id="colCategoria" text="Categoría"/>
                     <TableColumn fx:id="colCantidad" text="Cantidad" prefWidth="100" />
                     <TableColumn fx:id="colProveedor" text="Proveedor" prefWidth="150" />
                     <TableColumn fx:id="colNumeroFactura" text="Nº Factura" prefWidth="150" />

@@ -56,10 +56,6 @@ private void initialize() {
         // Llamar al método estático de ExportadorPDF
         ExportadorPDF.exportarProductosAPDF(productos, stage);
     }
-    @FXML
-    private void exportarExcel() {
-        // Aquí implementamos la exportación a Excel (usando Apache POI o similar)
-    }
 
     @FXML
     private void cerrarVentana() {

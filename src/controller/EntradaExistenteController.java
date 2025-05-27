@@ -1,4 +1,4 @@
-package controller;
+/*package controller;
 
 import database.EntradasDAO;
 import database.ProductosDAO;
@@ -7,7 +7,6 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.Entradas;
 import model.Productos;
-import controller.Sesion;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -75,4 +74,4 @@ public class EntradaExistenteController {
         alert.setContentText(mensaje);
         alert.showAndWait();
     }
-}
+}*/

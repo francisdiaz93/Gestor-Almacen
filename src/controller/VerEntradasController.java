@@ -52,9 +52,13 @@ public class VerEntradasController {
     private TableColumn<Entradas, String> colNumeroFactura;
     @FXML
     private TableColumn<Entradas, String> colObservaciones;
+    @FXML 
+    private TableColumn <Entradas, String> colCategoria;
     
     @FXML
     private TextField buscadorTextField;
+    @FXML
+    private javafx.scene.control.ComboBox<String> comboCategoriaFiltro;
     
     private ObservableList<Entradas> listaEntradas;
     
@@ -190,6 +194,27 @@ public class VerEntradasController {
         colNombreProducto.setCellValueFactory(data ->
             new SimpleStringProperty(obtenerNombreProducto(data.getValue().getProductoId()))
         );
+        
+        colCategoria.setCellValueFactory(data ->
+        new SimpleStringProperty(obtenerCategoriaProducto(data.getValue().getProductoId()))
+    );
+
+    cargarCategorias();
+
+    comboCategoriaFiltro.setOnAction(e -> {
+        String seleccion = comboCategoriaFiltro.getValue();
+        if (seleccion == null || seleccion.isEmpty()) {
+            tableView.setItems(listaEntradas);
+        } else {
+            ObservableList<Entradas> filtradas = FXCollections.observableArrayList();
+            for (Entradas e1 : listaEntradas) {
+                if (obtenerCategoriaProducto(e1.getProductoId()).equalsIgnoreCase(seleccion)) {
+                    filtradas.add(e1);
+                }
+            }
+            tableView.setItems(filtradas);
+        	}
+    	});
 
         colFechaIngreso.setCellValueFactory(new PropertyValueFactory<>("fechaIngreso"));
         colCantidad.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
@@ -233,8 +258,8 @@ public class VerEntradasController {
             float tableWidth = landscape.getWidth() - 2 * margin;
 
             // NUEVO ORDEN DE COLUMNAS
-            String[] columnas = {"Fecha Ingreso", "ID", "Producto", "Proveedor", "Cantidad", "Factura"};
-            float[] colProportions = {0.22f, 0.08f, 0.24f, 0.20f, 0.12f, 0.14f};
+            String[] columnas = {"Fecha Ingreso", "ID", "Producto", "Categoria", "Proveedor", "Cantidad", "Factura"};
+            float[] colProportions = {0.12f, 0.06f, 0.24f, 0.15f, 0.20f, 0.08f, 0.14f};
 
             float[] colWidths = new float[colProportions.length];
             for (int i = 0; i < colProportions.length; i++) {
@@ -295,11 +320,12 @@ public class VerEntradasController {
                 String fechaIngreso = entrada.getFechaIngreso() != null ? entrada.getFechaIngreso().toString() : "";
                 String id = String.valueOf(entrada.getId());
                 String producto = obtenerNombreProducto(entrada.getProductoId());
+                String categoria = obtenerCategoriaProducto(entrada.getProductoId()); // Asegúrate de implementar esto
                 String proveedor = entrada.getProveedor() != null ? entrada.getProveedor() : "";
                 String cantidad = String.valueOf(entrada.getCantidad());
                 String factura = entrada.getNumeroFactura() != null ? entrada.getNumeroFactura() : "";
 
-                String[] valores = {fechaIngreso, id, producto, proveedor, cantidad, factura};
+                String[] valores = {fechaIngreso, id, producto, categoria, proveedor, cantidad, factura};
 
                 for (int i = 0; i < valores.length; i++) {
                     contentStream.beginText();
@@ -351,5 +377,45 @@ public class VerEntradasController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    private String obtenerCategoriaProducto(int productoId) {
+        String categoria = "";
+        String sql = "SELECT categoria FROM productos WHERE id = ?";
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, productoId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                categoria = rs.getString("categoria");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error al obtener la categoría del producto: " + e.getMessage());
+        }
+        return categoria;
+    }
+
+    private void cargarCategorias() {
+        ObservableList<String> categorias = FXCollections.observableArrayList();
+        String sql = "SELECT DISTINCT categoria FROM productos ORDER BY categoria ASC";
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                categorias.add(rs.getString("categoria"));
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error al cargar categorías: " + e.getMessage());
+        }
+
+        categorias.add(0, ""); // Opción vacía para "Todas"
+        comboCategoriaFiltro.setItems(categorias);
     }
 }

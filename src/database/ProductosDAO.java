@@ -23,8 +23,8 @@ public class ProductosDAO {
 
     // Crear producto
     public static boolean insertarProducto(Productos producto) {
-        String sql = "INSERT INTO productos (nombre, codigo, categoria, descripcion, cantidad, proveedor, fecha_ingreso, marca, stock_minimo) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO productos (nombre, codigo, categoria, descripcion, cantidad, proveedor, fecha_ingreso, marca, stock_minimo, imagen) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, producto.getNombre().get());
             stmt.setString(2, producto.getCodigo().get());
@@ -35,6 +35,7 @@ public class ProductosDAO {
             stmt.setDate(7, Date.valueOf(producto.getFechaIngreso().get()));
             stmt.setString(8, producto.getMarca().get());
             stmt.setInt(9, producto.getStockMinimo().get());
+            stmt.setString(10, producto.getImagen());
 
             stmt.executeUpdate();
             return true;
@@ -63,6 +64,7 @@ public class ProductosDAO {
                 p.setFechaIngreso(rs.getDate("fecha_ingreso").toLocalDate());
                 p.setMarca(rs.getString("marca"));
                 p.setStockMinimo(rs.getInt("stock_minimo"));
+                p.setImagen(rs.getString("imagen"));
                 lista.add(p);
             }
 
@@ -75,7 +77,7 @@ public class ProductosDAO {
 
     // Actualizar producto
     public static boolean actualizarProducto(Productos producto) {
-        String sql = "UPDATE productos SET nombre=?, codigo=?, categoria=?, descripcion=?, cantidad=?, proveedor=?, fecha_ingreso=?, marca=?, stock_minimo=? WHERE id=?";
+        String sql = "UPDATE productos SET nombre=?, codigo=?, categoria=?, descripcion=?, cantidad=?, proveedor=?, fecha_ingreso=?, marca=?, stock_minimo=?, imagen=? WHERE id=?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, producto.getNombre().get());
             stmt.setString(2, producto.getCodigo().get());
@@ -86,7 +88,8 @@ public class ProductosDAO {
             stmt.setDate(7, Date.valueOf(producto.getFechaIngreso().get()));
             stmt.setString(8, producto.getMarca().get());
             stmt.setInt(9, producto.getStockMinimo().get());
-            stmt.setInt(10, producto.getId());
+            stmt.setString(10, producto.getImagen());
+            stmt.setInt(11, producto.getId());
             stmt.executeUpdate();
             return true;
         } catch (SQLException e) {

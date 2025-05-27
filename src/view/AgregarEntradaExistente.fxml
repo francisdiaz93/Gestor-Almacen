@@ -41,5 +41,8 @@
     <TextArea fx:id="observacionesField" prefRowCount="3" prefColumnCount="20"/>
 </HBox>
 
-    <Button text="Registrar Entrada" onAction="#registrarEntrada"/>
+    <Button text="Registrar Entrada"
+     		onAction="#registrarEntrada"
+     		prefWidth="200"
+     		style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-background-color: #4CAF50; -fx-text-fill: white;"/>
 </VBox>

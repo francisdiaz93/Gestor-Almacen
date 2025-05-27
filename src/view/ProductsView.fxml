@@ -15,27 +15,34 @@
     <Label text="Productos"
            style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
 
-<HBox alignment="TOP_CENTER">
-    <TextField fx:id="campoBusqueda"
-               promptText="Filtrar por nombre, categoría o código."
-               prefWidth="400"/>
-</HBox>
-               
-     <!--  Agregar nuevo producto -->
-     
-     <Button fx:id="btnAgregarEntrada" text="Agregar Producto Nuevo" onAction="#abrirVentanaAgregarProductoNuevo"/>
-     <Button text="Exportar a PDF" onAction="#onExportarPDF"/>
+    <!-- Campo de búsqueda -->
+    <HBox alignment="TOP_CENTER">
+        <TextField fx:id="campoBusqueda"
+                   promptText="Filtrar por nombre, categoría o código."
+                   prefWidth="400"/>
+    </HBox>
 
-    <!-- Scroll con productos como tarjetas -->
+    <!-- Botones en fila -->
+    <HBox spacing="15" alignment="CENTER">
+        <!-- Botón para agregar producto nuevo -->
+        <Button fx:id="btnAgregarEntrada" text="Agregar Producto Nuevo" onAction="#abrirVentanaAgregarProductoNuevo"/>
 
-        <FlowPane fx:id="contenedorProductos"
-          hgap="15" vgap="15"
-          alignment="TOP_LEFT">
-          <Button text="+" onAction="#abrirVentanaAgregarProductoNuevo"/>
+        <!-- Botón para exportar PDF -->
+        <Button text="Exportar a PDF" onAction="#onExportarPDF"/>
+    </HBox>
 
-		</FlowPane>
-        	<padding>
-        		<Insets top="10" right="10" bottom="10" left="10" />
-    		</padding>
+    <!-- Contenedor para las tarjetas de productos -->
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" prefHeight="500">
+        <content>
+            <FlowPane fx:id="contenedorProductos"
+                      hgap="15" vgap="15"
+                      alignment="TOP_LEFT"
+                      prefWrapLength="800"
+                      prefWidth="800"/>
+                      <padding>
+        				<Insets top="10" right="10" bottom="10" left="10" />
+    				  </padding>
+        </content>
+    </ScrollPane>
 
 </VBox>

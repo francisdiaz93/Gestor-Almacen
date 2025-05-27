@@ -2,8 +2,6 @@ package model;
 
 import java.time.LocalDate;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -21,6 +19,9 @@ public class Productos {
 	    private final SimpleStringProperty marca;
 	    private final SimpleIntegerProperty stockMinimo;
 	    private final SimpleIntegerProperty id;
+	    private final SimpleStringProperty imagen;
+		
+		private String rutaImagen;
 
 	    //Constructor sin parámetros.
 	    public Productos() {
@@ -34,11 +35,12 @@ public class Productos {
 	        this.marca = new SimpleStringProperty();
 	        this.stockMinimo = new SimpleIntegerProperty();
 	        this.id = new SimpleIntegerProperty();
+	        this.imagen = new SimpleStringProperty();
 	    }
 	    
 	    //Constructor con parámetros.
 	    public Productos(int id, String codigo, String nombre, String descripcion, String categoria,
-                int stock, String proveedor, LocalDate fechaIngreso) {
+                int stock, String proveedor, LocalDate fechaIngreso, String imagen) {
 			   this.id = new SimpleIntegerProperty(id);
 			   this.codigo = new SimpleStringProperty(codigo);
 			   this.nombre = new SimpleStringProperty(nombre);
@@ -47,6 +49,7 @@ public class Productos {
 			   this.stock = new SimpleIntegerProperty(stock);
 			   this.proveedor = new SimpleStringProperty(proveedor);
 			   this.fechaIngreso = new SimpleObjectProperty<>(fechaIngreso);
+			   this.imagen = new SimpleStringProperty(imagen);
 			
 			   this.marca = new SimpleStringProperty("");
 			   this.stockMinimo = new SimpleIntegerProperty(0);
@@ -199,6 +202,26 @@ public class Productos {
 
 		public LocalDate getFechaIngresoValue() {
 		    return fechaIngreso.get();
+		}
+		
+		public SimpleStringProperty imagenProperty() {
+		    return imagen;
+		}
+
+		public String getImagen() {
+		    return imagen.get();
+		}
+
+		public void setImagen(String imagen) {
+		    this.imagen.set(imagen);
+		}
+
+		public String getRutaImagen() {
+		    return rutaImagen;
+		}
+
+		public void setRutaImagen(String rutaImagen) {
+		    this.rutaImagen = rutaImagen;
 		}
 	}
 

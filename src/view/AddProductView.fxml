@@ -2,11 +2,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="controller.AddProductController">
     <children>
         <!-- ScrollPane que permite desplazamiento -->
-        <ScrollPane fitToWidth="true" prefWidth="800" prefHeight="600" vbarPolicy="AS_NEEDED" hbarPolicy="AS_NEEDED">
+        <ScrollPane fitToWidth="true" prefWidth="600" prefHeight="500" vbarPolicy="AS_NEEDED" hbarPolicy="AS_NEEDED">
             <content>
                 <VBox spacing="10" fillWidth="true" alignment="CENTER">
                     <children>
@@ -19,10 +20,24 @@
                         <TextField fx:id="marcaField" promptText="Marca"/>
                         <TextField fx:id="stockMinimoField" promptText="Stock Minimo"/>
                         <DatePicker fx:id="fechaIngresoPicker" promptText="Fecha de ingreso"/>
+                        <Label text="Observaciones:"/>
+                        <TextField fx:id="observacionesField" promptText="Observaciones" />
 
-						<Label text="Observaciones:"/>
-						<TextArea fx:id="observacionesField" />
-                        <Button text="Guardar" onAction="#handleAddProduct"/>
+                        <!-- Imagen y botón de seleccionar -->
+                        <HBox spacing="20" alignment="CENTER_LEFT">
+                            <VBox spacing="5" alignment="CENTER_LEFT">
+                                <Button text="Seleccionar Imagen" onAction="#seleccionarImagen" />
+                                <ImageView fx:id="imagenPreview" fitWidth="50" fitHeight="50" preserveRatio="true" />
+                            </VBox>
+                        </HBox>
+
+                        <!-- Botón Guardar centrado -->
+                        <HBox alignment="CENTER">
+                            <Button text="Guardar"
+                                    onAction="#handleAddProduct"
+                                    prefWidth="200"
+                                    style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-background-color: #4CAF50; -fx-text-fill: white;" />
+                        </HBox>
                     </children>
                 </VBox>
             </content>

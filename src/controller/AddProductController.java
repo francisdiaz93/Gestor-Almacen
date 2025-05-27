@@ -3,14 +3,22 @@ package controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+
+import java.io.File;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.List;
 
 import database.ProductosDAO;
-//import model.Productos;
 
 public class AddProductController {
 
@@ -22,8 +30,10 @@ public class AddProductController {
     @FXML private TextField marcaField;
     @FXML private ComboBox<String> categoriaComboBox;
     @FXML private DatePicker fechaIngresoPicker;
-    @FXML private TextArea observacionesField;
+    @FXML private TextField observacionesField;
     @FXML private TextField stockMinimoField;
+    @FXML private ImageView imagenPreview;
+    private File archivoImagen;
 
     private final String DB_URL = "jdbc:mysql://localhost:3307/almacen_db";
     private final String USER = "root";
@@ -48,9 +58,17 @@ public class AddProductController {
             // Generar el código basado en el último producto_id
             productoId = obtenerSiguienteProductoId(conn);
             String codigoGenerado = String.format("P%03d", productoId);
+            
+         // Copiar imagen a carpeta local y obtener ruta
+            String rutaImagen = null;
+            if (archivoImagen != null) {
+                Path destino = Paths.get("imagenes", archivoImagen.getName());
+                Files.copy(archivoImagen.toPath(), destino, StandardCopyOption.REPLACE_EXISTING);
+                rutaImagen = destino.toAbsolutePath().toString();
+            }
 
             // Insertar nuevo producto
-            String sqlInsert = "INSERT INTO productos (nombre, codigo, categoria, descripcion, cantidad, proveedor, fecha_ingreso, marca, stock_minimo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sqlInsert = "INSERT INTO productos (nombre, codigo, categoria, descripcion, cantidad, proveedor, fecha_ingreso, marca, stock_minimo, imagen) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             try (PreparedStatement insertStmt = conn.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS)) {
                 insertStmt.setString(1, nombreField.getText());
                 insertStmt.setString(2, codigoGenerado);
@@ -61,6 +79,7 @@ public class AddProductController {
                 insertStmt.setDate(7, Date.valueOf(fechaIngresoPicker.getValue()));
                 insertStmt.setString(8, marcaField.getText());
                 insertStmt.setInt(9, Integer.parseInt(stockMinimoField.getText()));
+                insertStmt.setString(10, rutaImagen);
 
                 insertStmt.executeUpdate();
 
@@ -167,5 +186,21 @@ public class AddProductController {
 
     public void setCallbackProductoRegistrado(Runnable callback) {
         this.callbackProductoRegistrado = callback;
+    }
+    
+    @FXML
+    private void seleccionarImagen(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Seleccionar Imagen del Producto");
+        fileChooser.getExtensionFilters().addAll(
+            new FileChooser.ExtensionFilter("Imágenes", "*.png", "*.jpg", "*.jpeg")
+        );
+        File file = fileChooser.showOpenDialog(null);
+
+        if (file != null) {
+            archivoImagen = file;
+            Image imagen = new Image(file.toURI().toString());
+            imagenPreview.setImage(imagen);
+        }
     }
 }

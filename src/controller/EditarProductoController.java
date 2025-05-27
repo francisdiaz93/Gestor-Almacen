@@ -2,13 +2,19 @@ package controller;
 
 import model.Productos;
 
+import java.io.File;
 import java.util.List;
 
 import database.ProductosDAO;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class EditarProductoController {
@@ -21,8 +27,9 @@ public class EditarProductoController {
 	    @FXML private DatePicker fechaIngresoPicker;
 	    @FXML private TextField marcaField;
 	    @FXML private TextField stockMinimoField;
-	    @FXML
-	    private ComboBox<String> comboCategorias;
+	    @FXML private ComboBox<String> comboCategorias;
+	    @FXML private ImageView imagenPreview;
+	    private File archivoImagen;
 
 	    private Productos producto;
 
@@ -52,17 +59,34 @@ public class EditarProductoController {
 	            producto.setFechaIngreso(fechaIngresoPicker.getValue());
 	            producto.setMarca(marcaField.getText());
 	            producto.setStockMinimo(Integer.parseInt(stockMinimoField.getText()));
+	            producto.setCategoria(comboCategorias.getValue());
 
-	            // Aquí puedes llamar al DAO para actualizar el producto en la base de datos
+	            if (archivoImagen != null) {
+	                producto.setImagen(archivoImagen.getAbsolutePath());
+	            }
+
 	            ProductosDAO.actualizarProducto(producto);
 
-	            // Cerrar ventana
+	            // Mostrar alerta de confirmación
+	            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+	            alert.setTitle("Éxito");
+	            alert.setHeaderText(null);
+	            alert.setContentText("El producto se ha editado correctamente.");
+	            alert.showAndWait();
+
 	            ((Stage) nombreField.getScene().getWindow()).close();
 	        } catch (Exception e) {
 	            e.printStackTrace();
-	            // Mostrar alerta si hay errores
+
+	            // Alerta de error opcional
+	            Alert alert = new Alert(Alert.AlertType.ERROR);
+	            alert.setTitle("Error");
+	            alert.setHeaderText("No se pudo guardar el producto");
+	            alert.setContentText("Verifica que todos los campos estén correctos.");
+	            alert.showAndWait();
 	        }
 	    }
+
 	    public void initialize() {
 	        cargarCategorias();
 	    }
@@ -71,5 +95,21 @@ public class EditarProductoController {
 	        List<String> categorias = ProductosDAO.obtenerCategorias();
 	        comboCategorias.getItems().clear();
 	        comboCategorias.getItems().addAll(categorias);
+	    }
+	    
+	    @FXML
+	    private void seleccionarImagen(ActionEvent event) {
+	        FileChooser fileChooser = new FileChooser();
+	        fileChooser.setTitle("Seleccionar Imagen del Producto");
+	        fileChooser.getExtensionFilters().addAll(
+	            new FileChooser.ExtensionFilter("Imágenes", "*.png", "*.jpg", "*.jpeg")
+	        );
+	        File file = fileChooser.showOpenDialog(null);
+
+	        if (file != null) {
+	            archivoImagen = file;
+	            Image imagen = new Image(file.toURI().toString());
+	            imagenPreview.setImage(imagen);
+	        }
 	    }
 	}

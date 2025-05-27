@@ -44,7 +44,10 @@
     </GridPane>
 
     <HBox spacing="10" alignment="CENTER_RIGHT">
-        <Button text="Guardar" onAction="#registrarSalida" />
+        <Button text="Guardar" 
+        		onAction="#registrarSalida"
+        		prefWidth="200"
+        		style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-background-color: #4CAF50; -fx-text-fill: white;" />
         <Button text="Cancelar" fx:id="btnCancelar" onAction="#cancelar" />
     </HBox>
 

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="controller.UsuariosController">
+    <top>
+        <Label text="Listado de Usuarios" style="-fx-font-size: 18px;" />
+    </top>
+    <center>
+        <TableView fx:id="tablaUsuarios">
+            <columns>
+                <TableColumn fx:id="colId" text="ID" />
+                <TableColumn fx:id="colNombre" text="Nombre" />
+                <TableColumn fx:id="colUsuario" text="Correo" />
+                <TableColumn fx:id="colRol" text="Rol" />
+            </columns>
+        </TableView>
+    </center>
+</BorderPane>

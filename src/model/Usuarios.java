@@ -5,8 +5,8 @@ public class Usuarios {
     // Atributos
     private int id;
     private String nombre;
-    private String correo;
-    private String contrasena;
+    private String usuario;
+    private String contraseña;
     private String rol;
 
     // Constructor vacío
@@ -14,11 +14,11 @@ public class Usuarios {
     }
 
     // Constructor con todos los parámetros
-    public Usuarios(int id, String nombre, String correo, String contrasena, String rol) {
+    public Usuarios(int id, String nombre, String usuario, String contraseña, String rol) {
         this.id = id;
         this.nombre = nombre;
-        this.correo = correo;
-        this.contrasena = contrasena;
+        this.usuario = usuario;
+        this.contraseña = contraseña;
         this.rol = rol;
     }
 
@@ -40,20 +40,20 @@ public class Usuarios {
         this.nombre = nombre;
     }
 
-    public String getCorreo() {
-        return correo;
+    public String getUsuario() {
+        return usuario;
     }
 
-    public void setCorreo(String correo) {
-        this.correo = correo;
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
     }
 
-    public String getContrasena() {
-        return contrasena;
+    public String getContraseña() {
+        return contraseña;
     }
 
     public void setContrasena(String contrasena) {
-        this.contrasena = contrasena;
+        this.contraseña = contrasena;
     }
 
     public String getRol() {
@@ -70,8 +70,8 @@ public class Usuarios {
         return "Usuarios{" +
                 "id=" + id +
                 ", nombre='" + nombre + '\'' +
-                ", correo='" + correo + '\'' +
-                ", contrasena='" + contrasena + '\'' +
+                ", usuario='" + usuario + '\'' +
+                ", contrasena='" + contraseña + '\'' +
                 ", rol='" + rol + '\'' +
                 '}';
     }

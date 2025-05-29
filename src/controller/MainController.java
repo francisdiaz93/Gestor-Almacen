@@ -8,6 +8,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+
 import java.io.IOException;
 import java.util.Optional;
 
@@ -16,6 +17,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ButtonBar;
 
 public class MainController {
@@ -37,6 +39,15 @@ public class MainController {
     private void mostrarSalidas() {
         cargarVista("/view/VerSalidasView.fxml");
     }
+    
+    @FXML
+    private Menu menuUsuarios;
+    
+    @FXML
+    private MenuItem menuItemVerUsuarios;
+
+    @FXML
+    private MenuItem menuItemAgregarUsuarios;
 
     @FXML
     private void registrarUsuarios() {
@@ -152,12 +163,39 @@ public class MainController {
     private void initialize() {
     	
     	cargarVista("/view/HomeView.fxml");
-    	
-    	System.out.println("ROL ACTUAL: " + Sesion.getRolUsuario()); // << DEBUG
-        // Verificar el rol del usuario actual y actualizar el menú
+        
+        System.out.println("ROL ACTUAL: " + Sesion.getRolUsuario());
+
         if (!Sesion.getRolUsuario().equals("admin")) {
-            // Si no es admin, deshabilitar el menú de agregar usuario
-            menuAgregar.setVisible(false);
+            // Ocultar todo el menú Usuarios
+            menuUsuarios.setVisible(false);
+        }
+    }
+    
+    @FXML
+    private void mostrarUsuarios() {
+        if (!Sesion.getRolUsuario().equals("admin")) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Acceso denegado");
+            alert.setHeaderText(null);
+            alert.setContentText("No tienes permisos para acceder a esta función.");
+            alert.showAndWait();
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Usuarios.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Listado de Usuarios");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error al abrir Usuarios.fxml: " + e.getMessage());
         }
     }
 }

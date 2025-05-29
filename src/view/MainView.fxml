@@ -25,9 +25,10 @@
             <Menu text="Salidas">
                 <MenuItem text="Ver Salidas" onAction="#mostrarSalidas"/>
             </Menu>
-            <Menu fx:id="menuAgregar" text= "Agregar Usuario">
-            	<MenuItem text="Agregar nuevo usuario" onAction="#registrarUsuarios"/>
-            </Menu>
+            <Menu text="Usuarios" fx:id="menuUsuarios">
+    			<MenuItem text="Ver usuarios" onAction="#mostrarUsuarios" fx:id="menuItemVerUsuarios"/>
+    			<MenuItem text="Agregar usuarios" onAction="#registrarUsuarios" fx:id="menuItemAgregarUsuarios"/>
+			</Menu>
             
         </MenuBar>
     </top>

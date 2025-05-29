@@ -22,8 +22,8 @@ public class UsuariosDAO {
                 Usuarios usuario = new Usuarios(
                         rs.getInt("id"),
                         rs.getString("nombre"),
-                        rs.getString("correo"),
-                        rs.getString("contrasena"),
+                        rs.getString("usuario"),
+                        rs.getString("contraseña"),
                         rs.getString("rol")
                 );
                 listaUsuarios.add(usuario);
@@ -50,8 +50,8 @@ public class UsuariosDAO {
                 usuario = new Usuarios(
                         rs.getInt("id"),
                         rs.getString("nombre"),
-                        rs.getString("correo"),
-                        rs.getString("contrasena"),
+                        rs.getString("usuario"),
+                        rs.getString("contraseña"),
                         rs.getString("rol")
                 );
             }
@@ -64,16 +64,16 @@ public class UsuariosDAO {
 
     // Método para agregar un nuevo usuario
     public boolean agregarUsuario(Usuarios usuario) {
-        String query = "INSERT INTO usuarios (nombre, correo, contrasena, rol) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO usuarios (nombre, usuario, contraseña, rol) VALUES (?, ?, ?, ?)";
 
         try (Connection conn = database.DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
             // Hashear la contraseña antes de guardarla
-            String contrasenaHasheada = BCrypt.hashpw(usuario.getContrasena(), BCrypt.gensalt());
+            String contrasenaHasheada = BCrypt.hashpw(usuario.getContraseña(), BCrypt.gensalt());
 
             stmt.setString(1, usuario.getNombre());
-            stmt.setString(2, usuario.getCorreo());
+            stmt.setString(2, usuario.getUsuario());
             stmt.setString(3, contrasenaHasheada);
             stmt.setString(4, usuario.getRol());
 
@@ -88,16 +88,16 @@ public class UsuariosDAO {
 
     // Método para actualizar un usuario
     public boolean actualizarUsuario(Usuarios usuario) {
-        String query = "UPDATE usuarios SET nombre = ?, correo = ?, contrasena = ?, rol = ? WHERE id = ?";
+        String query = "UPDATE usuarios SET nombre = ?, usuario = ?, contrasena = ?, rol = ? WHERE id = ?";
 
         try (Connection conn = database.DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
             // Hashear la contraseña antes de guardarla
-            String contrasenaHasheada = BCrypt.hashpw(usuario.getContrasena(), BCrypt.gensalt());
+            String contrasenaHasheada = BCrypt.hashpw(usuario.getContraseña(), BCrypt.gensalt());
 
             stmt.setString(1, usuario.getNombre());
-            stmt.setString(2, usuario.getCorreo());
+            stmt.setString(2, usuario.getUsuario());
             stmt.setString(3, contrasenaHasheada);
             stmt.setString(4, usuario.getRol());
             stmt.setInt(5, usuario.getId());
@@ -128,61 +128,27 @@ public class UsuariosDAO {
     }
 
 
-public boolean existeUsuario(String correo, String contrasenaIngresada) {
-    String query = "SELECT contrasena FROM usuarios WHERE correo = ?";
-    try (Connection conn = database.DatabaseConnection.getConnection();
-         PreparedStatement stmt = conn.prepareStatement(query)) {
+	public boolean existeUsuario(String correo, String contrasenaIngresada) {
+	    String query = "SELECT contraseña FROM usuarios WHERE correo = ?";
+	    try (Connection conn = database.DatabaseConnection.getConnection();
+	         PreparedStatement stmt = conn.prepareStatement(query)) {
+	
+	        stmt.setString(1, correo);
+	        ResultSet rs = stmt.executeQuery();
+	
+	        if (rs.next()) {
+	            String contrasenaHasheada = rs.getString("contraseña");
+	            // Compara la contraseña ingresada con la hasheada en BD
+	            return BCrypt.checkpw(contrasenaIngresada, contrasenaHasheada);
+	        } else {
+	            // No existe usuario con ese correo
+	            return false;
+	        }
+	
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
 
-        stmt.setString(1, correo);
-        ResultSet rs = stmt.executeQuery();
-
-        if (rs.next()) {
-            String contrasenaHasheada = rs.getString("contrasena");
-            // Compara la contraseña ingresada con la hasheada en BD
-            return BCrypt.checkpw(contrasenaIngresada, contrasenaHasheada);
-        } else {
-            // No existe usuario con ese correo
-            return false;
-        }
-
-    } catch (SQLException e) {
-        e.printStackTrace();
-        return false;
-    }
-}
-    
-    /*public void migrarContrasenas() {
-        String selectQuery = "SELECT id, contraseña FROM usuarios";
-        String updateQuery = "UPDATE usuarios SET contraseña = ? WHERE id = ?";
-
-        try (Connection conn = database.DatabaseConnection.getConnection();
-             PreparedStatement selectStmt = conn.prepareStatement(selectQuery);
-             ResultSet rs = selectStmt.executeQuery()) {
-
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                String contrasenaTextoPlano = rs.getString("contraseña");
-
-                // Verificamos si ya está encriptada (usualmente comienza con $2a$ o $2b$)
-                if (contrasenaTextoPlano.startsWith("$2a$") || contrasenaTextoPlano.startsWith("$2b$")) {
-                    continue; // ya está encriptada
-                }
-
-                // Encriptar la contraseña
-                String contrasenaEncriptada = controller.Seguridad.encriptarPassword(contrasenaTextoPlano);
-
-                // Actualizar en la base de datos
-                try (PreparedStatement updateStmt = conn.prepareStatement(updateQuery)) {
-                    updateStmt.setString(1, contrasenaEncriptada);
-                    updateStmt.setInt(2, id);
-                    updateStmt.executeUpdate();
-                }
-            }
-
-            System.out.println("Migración completada exitosamente.");
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }*/
 }

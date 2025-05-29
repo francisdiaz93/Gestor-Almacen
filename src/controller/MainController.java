@@ -49,7 +49,7 @@ public class MainController {
             stage.setScene(new Scene(root));
             stage.show();
             
-            System.out.println("Ventana de registro abierta.");  // para depuración
+            System.out.println("Ventana de registro abierta.");
 
         } catch (Exception e) {
             e.printStackTrace();

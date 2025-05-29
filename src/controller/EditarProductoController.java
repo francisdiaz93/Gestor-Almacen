@@ -46,15 +46,16 @@ public class EditarProductoController {
 	        marcaField.setText(producto.getMarca().get());
 	        stockMinimoField.setText(String.valueOf(producto.getStockMinimo().get()));
 	        comboCategorias.setValue(producto.getCategoria().get());
+	        
+	        codigoField.setDisable(true);      // deshabilita el campo (gris y no editable)
+	        cantidadField.setDisable(true); 
 	    }
 
 	    @FXML
 	    private void guardarCambios() {
 	        try {
 	            producto.setNombre(nombreField.getText());
-	            producto.setCodigo(codigoField.getText());
 	            producto.setDescripcion(descripcionField.getText());
-	            producto.setStock(Integer.parseInt(cantidadField.getText()));
 	            producto.setProveedor(proveedorField.getText());
 	            producto.setFechaIngreso(fechaIngresoPicker.getValue());
 	            producto.setMarca(marcaField.getText());

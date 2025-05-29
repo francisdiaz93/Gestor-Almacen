@@ -22,11 +22,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Date;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -447,7 +444,6 @@ public class SalidasViewController {
 
             if (archivo != null) {
                 document.save(archivo);
-                mostrarAlerta("Exportación exitosa", "Reporte de salidas exportado correctamente.");
             }
 
         } catch (IOException ex) {

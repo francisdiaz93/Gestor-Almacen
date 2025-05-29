@@ -133,6 +133,7 @@ public class ProductosDAO {
                 }
                 producto.setMarca(rs.getString("marca"));
                 producto.setStockMinimo(rs.getInt("stock_minimo"));
+                producto.setImagen(rs.getString("imagen"));
             }
         } catch (SQLException e) {
             System.err.println("Error al buscar producto por código: " + e.getMessage());

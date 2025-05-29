@@ -3,8 +3,6 @@ package database;
 import model.Salidas;
 
 import java.sql.*;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,6 +100,33 @@ public class SalidasDAO {
         return numeroFactura;
     }
 
+ // Método para obtener todas las salidas de un producto específico
+    public static List<Salidas> obtenerPorProducto(int productoId) {
+        List<Salidas> lista = new ArrayList<>();
+        String sql = "SELECT * FROM salidas WHERE producto_id = ? ORDER BY fecha_salida DESC";
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, productoId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Salidas s = new Salidas();
+                s.setId(rs.getInt("id"));
+                s.setProductoId(rs.getInt("producto_id"));
+                s.setDepartamento(rs.getString("departamento"));
+                s.setCantidad(rs.getInt("cantidad"));
+                s.setFechaSalida(rs.getDate("fecha_salida"));
+                s.setMotivo(rs.getString("motivo"));
+                s.setUsuarioId(rs.getInt("usuario_id"));
+                s.setNumeroFactura(rs.getString("numeroFactura"));
+                lista.add(s);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
+
 }
-
-

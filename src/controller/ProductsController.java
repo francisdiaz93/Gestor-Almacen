@@ -45,7 +45,7 @@ public class ProductsController {
 
         campoBusqueda.textProperty().addListener((obs, oldText, newText) -> {
             filtrarProductos(newText);
-        });
+        });        
     }
 
     private void filtrarProductos(String texto) {
@@ -94,6 +94,13 @@ public class ProductsController {
         }
 
         tarjeta.setUserData(producto);
+        
+     // Abrir detalles al hacer doble clic en la tarjeta
+        tarjeta.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                abrirVentanaDetalleProducto(producto);
+            }
+        });
 
         // Imagen del producto centrada y con bordes redondeados
         ImageView imageView = new ImageView();
@@ -273,5 +280,26 @@ public class ProductsController {
     @FXML
     private void onExportarPDF(ActionEvent event) {
         ExportadorPDF.exportarProductosAPDF(productosMostrados, (Stage) contenedorProductos.getScene().getWindow());
+    }
+    
+ // Método para abrir ventana detalle
+    private void abrirVentanaDetalleProducto(Productos producto) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/DetalleProductoView.fxml"));
+            Parent root = loader.load();
+
+            DetalleProductoController controller = loader.getController();
+            controller.setProducto(producto);
+
+            Stage stage = new Stage();
+            stage.setTitle("Detalle del producto: " + producto.getNombre().get());
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL); // bloquea ventana padre
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Aquí puedes mostrar diálogo de error si quieres
+        }
     }
 }

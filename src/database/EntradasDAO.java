@@ -163,5 +163,35 @@ public class EntradasDAO {
         }
         return entradasList;
     }
+    
+ // Método para obtener todas las entradas de un producto específico
+    public static List<Entradas> obtenerPorProducto(int productoId) {
+        List<Entradas> entradasList = new ArrayList<>();
+        String query = "SELECT * FROM entradas WHERE producto_id = ? ORDER BY fecha_ingreso DESC";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, productoId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Entradas entrada = new Entradas(
+                    rs.getInt("id"),
+                    new SimpleIntegerProperty(rs.getInt("producto_id")),
+                    new SimpleIntegerProperty(rs.getInt("cantidad")),
+                    rs.getDate("fecha_ingreso"),
+                    rs.getString("proveedor"),
+                    rs.getInt("usuario_id"),
+                    rs.getString("numero_factura"),
+                    rs.getString("observaciones")
+                );
+                entradasList.add(entrada);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return entradasList;
+    }
 }
 
